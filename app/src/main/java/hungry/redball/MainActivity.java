@@ -32,11 +32,11 @@ import hungry.redball.util.RedballProgressDialog;
 public class MainActivity extends AppCompatActivity {
     private HashMap<String,JSONArray> map = new HashMap<String,JSONArray>();
     static public BasicDBObject newContacts = new BasicDBObject();
-    private final String TAG="MainActivity";
+    private final String TAG2="MainActivity";
     //networkCheck dialog
     private AlertDialog networkCheckDialog;
     //redball dialog
-    private RedballProgressDialog redballDialog232321312312123;
+    private RedballProgressDialog redballDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
     private void readJsonFile(){
         Log.e("static", "readJsonFile");
         try {
-            String loadMatchInfo= StaticPref.loadPref_String(this, TAG, LoadingActivity.JSON_MATCH);
+            String loadMatchInfo= StaticPref.loadPref_String(this, TAG2, LoadingActivity.JSON_MATCH);
             JSONArray contacts=new JSONArray(loadMatchInfo);
             JSONObject dateObj;
 
@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
                 dateObj=userObj.getJSONObject("date");
 
                 String newKey = userObj.get("league").toString()+"_"+dateObj.getString("year")+dateObj.getString("month");
-                if(map.containqwdqwdsKey(newKey)){
+                if(map.containsKey(newKey)){
                     JSONArray classifiData = map.get(newKey);
                     classifiData.put(userObj);
                     map.put(newKey, classifiData);
@@ -94,19 +94,20 @@ public class MainActivity extends AppCompatActivity {
                 PendingIntent.FLAG_NO_CREATE) != null);
 
 //        if(alarmUp){
-//            Log.e(TAG, "알23423423람이가 벌써 동작하고있잔아...");
+//            Log.e(TAG, "알람이가 벌써 동작하고있잔아...");
 //        }else{
-            Log.e(TAG, "메인에서 테스트중..");
-            Log.e(TAG, "반복 스케줄 동작합니다.");
+            Log.e(TAG2, "메인에서 테스트중..");
+            Log.e(TAG2, "반복 스케줄 동작합니다.");
             RepeatReceiver repeatAlarm = new RepeatReceiver();
             //Context context, int RequestCode //무조건 0 주면 된다.
-          if(!StaticMethod.isNetworkConnected(getBaseContext()))
-            showNet    repeatAlarm.setAlarm(this, 0);
+            repeatAlarm.setAlarm(this, 0);
 //        }
-}
+    }
 
-    pubwdworkDialog();
-        Intent intenqwdqwdt = new Intent(this, TeamActivity.class);
+    public void ButtonTeamOnClicked(View view) {
+        if(!StaticMethod.isNetworkConnected(getBaseContext()))
+            showNetworkDialog();
+        Intent intent = new Intent(this, TeamActivity.class);
         startActivity(intent);
     }
     public void ButtonPlayerOnClicked(View view) {
@@ -151,19 +152,7 @@ public class MainActivity extends AppCompatActivity {
         //화면 터치시 꺼짐 방지
         redballDialog.setCancelable(false);
     }
-    private vo  RepeatReceiver repeatAlarm = new RepeatReceiver();
-        //Context context, int RequestCode //무조건 0 주면 된다.
-        if(!StaticMethod.isNetworkConnected(getBaseContext()))
-        showNet    repeatAlarm.setAlarm(this, 0);
-//        }
-        }
-        RepeatReceiver repeatAlarm = new RepeatReceiver();
-        //Context context, int RequestCode //무조건 0 주면 된다.
-        if(!StaticMethod.isNetworkConnected(getBaseContext()))
-        showNet    repeatAlarm.setAlarm(this, 0);
-//        }
-        }
-        id hideRedballDialog(){
+    private void hideRedballDialog(){
         if (redballDialog != null) {
             redballDialog.dismiss();
             redballDialog = null;
@@ -180,13 +169,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if  RepeatReceiver repeatAlarm = new RepeatReceiver();
-        //Context context, int RequestCode //무조건 0 주면 된다.
-        if(!StaticMethod.isNetworkConnected(getBaseContext()))
-        showNet    repeatAlarm.setAlarm(this, 0);
-//        }
-        }
-        (networkCheckDialog!=null)
+        if(networkCheckDialog!=null)
             hideNdialog();
         if (redballDialog != null)
             hideRedballDialog();
