@@ -1,6 +1,6 @@
 package hungry.redball;
 //uk2uk2uk2uk2uk2uk2uk2uk2uk
-//ㅓ부꺼뺴쭈꺼ㅐㅃ쭈꺼ㅐㅃ쭈거ㅐㅃ쭈꺼ㅐㅃ쭈꺼ㅐㅃ쭈꺼ㅐㅂ주어ㅐㅈㅂ워ㅐㅂ조어ㅐㅂ조애ㅓㅂ조어ㅐqow292323232wndjw
+//uk2 바꿈.
 import android.app.AlertDialog;
 import android.app.PendingIntent;
 import android.content.DialogInterface;
