@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void readJsonFile(){
-        Log.e("static", "readJsonFile");
+        Log.e("static", "readJsonFile222222222222222222");
         try {
             String loadMatchInfo= StaticPref.loadPref_String(this, TAG, LoadingActivity.JSON_MATCH);
             JSONArray contacts=new JSONArray(loadMatchInfo);
