@@ -1,5 +1,5 @@
 package hungry.redball;
-//uk2uk2uk2uk2uk2uk2uk2uk2uk
+
 
 import android.app.AlertDialog;
 import android.app.PendingIntent;
@@ -29,11 +29,11 @@ import hungry.redball.fixtures.FicturesActivity;
 import hungry.redball.player.PlayerActivity;
 import hungry.redball.team.TeamActivity;
 import hungry.redball.util.RedballProgressDialog;
-//qwjen120123123123123
+
 public class MainActivity extends AppCompatActivity {
     private HashMap<String,JSONArray> map = new HashMap<String,JSONArray>();
     static public BasicDBObject newContacts = new BasicDBObject();
-    int trash;
+
     private final String TAG="MainActivity";
     //networkCheck dialog
     private AlertDialog networkCheckDialog;
