@@ -1,0 +1,54 @@
+<resources>
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!--Action bar style-->
+        <item name="android:actionBarStyle">@style/AppTheme.ActionBar</item>
+        <item name="actionBarStyle">@style/AppTheme.ActionBar</item>
+
+    </style>
+
+    <style name="AppTheme.ActionBar" parent="Widget.AppCompat.Light.ActionBar">
+        <!--<item name="android:height">@dimen/bar_height</item>
+        <item name="height">@dimen/bar_height</item>-->
+        <item name="background">@color/red</item>
+    </style>
+
+    <style name="main_Text" parent="android:Widget.TextView">
+        <item name="android:layout_height">100dp</item>
+        <item name="android:textSize">30dp</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:layout_gravity">center</item>
+
+    </style>
+
+    <style name="row2_Text" parent="android:Widget.TextView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:textSize">13dp</item>
+        <item name="android:textColor">@color/weak</item>
+        <item name="android:paddingLeft">10dp</item>
+    </style>
+
+    <style name="row3_Text" parent="android:Widget.TextView">
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:textSize">20dp</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <!-- Button Widget Style  -->
+    <style name="Nova.Widget.Button" parent="android:Widget.ImageButton">
+        <item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
+        <item name="android:textColor">@color/blue</item>
+        <item name="android:background">@drawable/xml_btn</item>
+        <item name="android:minWidth">45dp</item>
+        <item name="android:minHeight">30dp</item>
+    </style>
+
+</resources>
+    <!--<style name="MyCustomDropDownItemStyle" parent="Widget.AppCompat.Spinner.DropDown.ActionBar">-->
+    <!--<item name="android:background">@color/white</item>-->
+    <!--</style>-->

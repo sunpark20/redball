@@ -1,0 +1,10 @@
+복잡해서 설명서
+
+1. 매니페스트  service, reciver 등록  부트할때 옵션 true로 주시오.
+2. repeatReciver- 24시간 반복을 담당.
+   AlarmReceiver- 노티피케이션 알람을 셋함.
+   SchedulingService- 노티피케이션 설정하는 곳인데.  (url 처리도 해야되서 따로 서비스로 빼놨음)
+
+3. static 해쉬맵으로 데이터를 전달하고   key, when변수를 intent로 전달한다. (요놈들이 hash맵의 키)
+  좀 간단하게 만들고 싶은데, 개 복잡해짐...
+

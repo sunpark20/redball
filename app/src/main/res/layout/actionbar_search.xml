@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AutoCompleteTextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/actionbar_search"
+    android:text="qwdqwdqwd"
+    android:layout_width="200dp"
+    android:layout_height="wrap_content" />

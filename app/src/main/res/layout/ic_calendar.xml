@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:id="@+id/layout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="80dp"
+    android:layout_height="60dp"
+    android:weightSum="1">
+    <LinearLayout
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:orientation="vertical"
+        android:background="@drawable/f_calendar">
+        <TextView
+            android:layout_width="57dp"
+            android:layout_height="13dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="14dp"
+            android:layout_marginLeft="1dp"
+            android:gravity="center"
+            android:textColor="@color/darkblue"
+            android:textStyle="bold"
+            android:textSize="10dp"
+            android:text="2016"
+            android:id="@+id/year_text"/>
+
+        <TextView
+            android:layout_width="57dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginLeft="1dp"
+            android:layout_marginTop="2dp"
+            android:gravity="center"
+            android:textColor="@android:color/tertiary_text_dark"
+            android:textStyle="bold"
+            android:textSize="22dp"
+            android:text="11"
+            android:id="@+id/month_text" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="20dp"
+        android:layout_height="60dp"></LinearLayout>
+</LinearLayout>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="65dp"
+    android:layout_height="53dp"
+    android:orientation="horizontal">
+
+    <ImageView
+        android:id="@+id/jong"
+        android:scaleType="centerCrop"
+        android:src="@drawable/f_unjong"
+        android:layout_width="53dp"
+        android:layout_height="53dp"
+        android:layout_gravity="center"
+        android:gravity="center"/>
+    <!--오른쪽공갈-->
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+</LinearLayout>

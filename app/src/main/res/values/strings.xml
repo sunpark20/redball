@@ -1,0 +1,36 @@
+<resources>
+    <string name="app_name">레드볼</string>
+    <string name="team">팀</string>
+    <string name="player">선수</string>
+    <string name="alarm">알림</string>
+    <string-array name="spinnerList">
+        <item >골</item>
+        <item >어시스트</item>
+        <item >MotM</item>
+        <item >경기수</item>
+        <item >Yel</item>
+        <item >Red</item>
+
+        <item >슈팅</item>
+        <item >돌파성공</item>
+        <item >역습</item>
+        <item >오프사이드</item>
+        <item >파울유도</item>
+        <item >공뺏김</item>
+
+        <item >크로스</item>
+        <item >공중볼획득</item>
+        <item >키패스</item>
+        <item >패스</item>
+        <item >패스성공률</item>
+        <item >롱패스</item>
+
+        <item >태클</item>
+        <item >인터셉트</item>
+        <item >블럭</item>
+        <item >파울</item>
+        <item >클리어</item>
+        <item >자살골</item>
+    </string-array>
+
+</resources>

@@ -1,0 +1,40 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 23
+    buildToolsVersion "23.0.0"
+
+    defaultConfig {
+        //multiDexEnabled true  // 라이브러리 중복 허용 소스
+        applicationId "com.redball"
+        minSdkVersion  16//원래는 16입니다.
+        targetSdkVersion 23
+        versionName "1.02"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+//    캘린더 랭3 조다
+    packagingOptions {
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/NOTICE'
+        exclude 'LICENSE.txt'
+    }
+}
+
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile 'com.code-troopers.betterpickers:library:2.2.2'
+    compile 'com.android.support:appcompat-v7:23.0.0'
+    compile 'com.astuetz:pagerslidingtabstrip:1.0.1'
+    compile 'org.apache.commons:commons-lang3:3.0'
+    compile 'org.jsoup:jsoup:1.8.3'
+    compile 'com.google.code.gson:gson:2.5'
+    compile 'joda-time:joda-time:2.9.2'
+    compile files('libs/mongo-2.10.1.jar')
+}

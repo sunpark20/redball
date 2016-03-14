@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="4dp">
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_gravity="center"
+            android:text="리그 선택 후 팀을 선택해주세요"
+            android:textColor="@color/red"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            />
+        <TextView
+            android:id="@+id/empty"
+            android:layout_weight="1" android:layout_width="0dp"
+            android:layout_height="wrap_content" />
+        <Button
+            android:textSize="30dp"
+            android:background="@drawable/xml_btn"
+            android:text="완료"
+            android:textColor="@color/blue"
+            android:onClick="exitButtonOnClicked"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+    <!--grid1 for ligue-->
+    <GridView
+        android:id="@+id/grid1"
+        android:verticalSpacing="2dp"
+        android:numColumns="auto_fit"
+        android:stretchMode="columnWidth"
+        android:columnWidth="80dp"
+        android:gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        />
+    <LinearLayout
+        android:orientation="horizontal"
+        android:id="@+id/그냥줄이어라"
+        android:layout_margin="3dp"
+        android:background="@color/white"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"></LinearLayout>
+
+    <GridView
+        android:id="@+id/grid2"
+        android:verticalSpacing="2dp"
+        android:numColumns="auto_fit"
+        android:stretchMode="columnWidth"
+        android:columnWidth="90dp"
+        android:gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:id="@+id/그냥줄이어라2"
+        android:layout_margin="3dp"
+        android:background="@color/white"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"></LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:text="나의 알림 받을 팀"
+            android:textColor="@color/red"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:text=" (터치 시 삭제됩니다)"
+            android:textColor="@color/pressed"
+            android:textSize="13dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:id="@+id/그냥줄이어라3"
+        android:layout_margin="3dp"
+        android:background="@color/white"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"></LinearLayout>
+
+    <GridView
+        android:id="@+id/grid3"
+        android:background="@color/wred"
+        android:verticalSpacing="2dp"
+        android:numColumns="auto_fit"
+        android:stretchMode="columnWidth"
+        android:columnWidth="90dp"
+        android:gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        />
+</LinearLayout>

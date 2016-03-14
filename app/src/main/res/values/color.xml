@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="darkblue">#a00c178e</color>
+    <color name="pressedblue">#c5d7ec</color>
+    <color name="wweak">#a0d7d7dc</color>
+    <color name="weak">#a0b7b7bc</color>
+    <color name="sweak">#a08f8f94</color>
+    <color name="medium">#a05a5a5f</color>
+    <color name="wred">#22ff192f</color>
+    <color name="red">#d9c92e3f</color>
+    <color name="pred">#f0ff8800</color>
+    <color name="yel">#dfe7ba17</color>
+    <color name="tab">#85AF2F</color>
+    <color name="blue">#b52074d0</color>
+    <color name="black">#ff000000</color>
+    <color name="green">#e312b00a</color>
+    <color name="white">#ffffff</color>
+    <color name="pressed">#57ff0d00</color>
+    <color name="nonpressed">#ffe9e9e9</color>
+    <color name="transparent">#00ffffff</color>
+    <color name="datestate">#A0F5DCD8</color>
+
+</resources>

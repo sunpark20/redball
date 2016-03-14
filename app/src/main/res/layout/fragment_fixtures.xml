@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+android:orientation="vertical">
+    <TextView
+        android:id="@+id/dateState"
+        android:layout_width="match_parent"
+        android:layout_height="25dp"
+        android:textSize="15dp"
+        android:background="@color/datestate"/>
+    <ListView
+        android:id="@+id/listView"
+        android:dividerHeight="1dp"
+        android:divider="#a0b7b7bc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        />
+</LinearLayout>

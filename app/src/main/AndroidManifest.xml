@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="hungry.redball" >
+
+    <!--효짜폰에서만 뜸 -->
+    <uses-permission
+        android:name="android.permission.VIBRATE"></uses-permission>
+
+    <!-- Network State Permissions -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <!-- 부팅 시 서비스 실행 -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <!-- 알림 화면 깨우기 -->
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <!-- 파일 입출력 -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/icon_redball"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme">
+
+        <activity
+            android:name=".LoadingActivity"
+            android:label="로딩액티비티">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".MainActivity"
+            android:label="@string/app_name" >
+        </activity>
+        <activity
+            android:name=".team.TeamActivity"
+            android:label="@string/team"
+            android:parentActivityName=".MainActivity" >
+        </activity>
+        <activity
+            android:name=".player.PlayerActivity"
+            android:label="@string/player"
+            android:parentActivityName=".MainActivity">
+        </activity>
+        <activity
+            android:name=".fixtures.FicturesActivity"
+            android:label="경기일정"
+            android:parentActivityName=".MainActivity">
+        </activity>
+        <activity
+            android:name=".alram.AlarmActivity"
+            android:label="@string/alarm">
+        </activity>
+        <activity
+            android:name=".alram.PrefActivity"
+            android:label="경기일정 모아보기">
+        </activity>
+
+
+        <receiver android:name=".alram.AlarmReceiver"></receiver>
+        <receiver android:name=".alram.RepeatReceiver"></receiver>
+        <receiver android:name=".alram.BootReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"></action>
+            </intent-filter>
+        </receiver>
+        <service android:name=".alram.SchedulingService" />
+
+    </application>
+
+</manifest>
