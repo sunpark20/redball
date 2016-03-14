@@ -1,6 +1,6 @@
 package hungry.redball;
 //uk2uk2uk2uk2uk2uk2uk2uk2uk
-//uk2에 버전 2222
+//uk2에 버전 2222qwdqwdqwdqwdwq
 import android.app.AlertDialog;
 import android.app.PendingIntent;
 import android.content.DialogInterface;
