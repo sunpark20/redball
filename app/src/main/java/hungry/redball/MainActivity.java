@@ -1,5 +1,5 @@
 package hungry.redball;
-
+//uk2uk2uk2uk2uk2uk2uk2uk2uk
 
 import android.app.AlertDialog;
 import android.app.PendingIntent;
@@ -29,13 +29,12 @@ import hungry.redball.fixtures.FicturesActivity;
 import hungry.redball.player.PlayerActivity;
 import hungry.redball.team.TeamActivity;
 import hungry.redball.util.RedballProgressDialog;
-//dasfg
-//1234
+//qwjen120123123123123
 public class MainActivity extends AppCompatActivity {
     private HashMap<String,JSONArray> map = new HashMap<String,JSONArray>();
     static public BasicDBObject newContacts = new BasicDBObject();
-
-    private final String TAG2="MainActivity";
+    int trash;
+    private final String TAG="MainActivity";
     //networkCheck dialog
     private AlertDialog networkCheckDialog;
     //redball dialog
@@ -52,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
     private void readJsonFile(){
         Log.e("static", "readJsonFile");
         try {
-            String loadMatchInfo= StaticPref.loadPref_String(this, TAG2, LoadingActivity.JSON_MATCH);
+            String loadMatchInfo= StaticPref.loadPref_String(this, TAG, LoadingActivity.JSON_MATCH);
             JSONArray contacts=new JSONArray(loadMatchInfo);
             JSONObject dateObj;
 
@@ -102,8 +101,8 @@ public class MainActivity extends AppCompatActivity {
 //        if(alarmUp){
 //            Log.e(TAG, "알람이가 벌써 동작하고있잔아...");
 //        }else{
-            Log.e(TAG2, "메인에서 테스트중..");
-            Log.e(TAG2, "반복 스케줄 동작합니다.");
+            Log.e(TAG, "메인에서 테스트중..");
+            Log.e(TAG, "반복 스케줄 동작합니다.");
             RepeatReceiver repeatAlarm = new RepeatReceiver();
             //Context context, int RequestCode //무조건 0 주면 된다.
             repeatAlarm.setAlarm(this, 0);
