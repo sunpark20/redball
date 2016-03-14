@@ -1,6 +1,5 @@
 package hungry.redball;
-//uk2uk2uk2uk2uk2uk2uk2uk2uk
-//uk2에 버전 2222qwdqwdqwdqwdwq
+
 import android.app.AlertDialog;
 import android.app.PendingIntent;
 import android.content.DialogInterface;
@@ -29,11 +28,10 @@ import hungry.redball.fixtures.FicturesActivity;
 import hungry.redball.player.PlayerActivity;
 import hungry.redball.team.TeamActivity;
 import hungry.redball.util.RedballProgressDialog;
-//qwjen120123123123123
+
 public class MainActivity extends AppCompatActivity {
     private HashMap<String,JSONArray> map = new HashMap<String,JSONArray>();
     static public BasicDBObject newContacts = new BasicDBObject();
-    int trash;
     private final String TAG="MainActivity";
     //networkCheck dialog
     private AlertDialog networkCheckDialog;
@@ -45,11 +43,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         readJsonFile();
-
     }
 
     private void readJsonFile(){
-        Log.e("static", "readJsonFile2");
+        Log.e("static", "readJsonFile");
         try {
             String loadMatchInfo= StaticPref.loadPref_String(this, TAG, LoadingActivity.JSON_MATCH);
             JSONArray contacts=new JSONArray(loadMatchInfo);
@@ -71,12 +68,10 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
             newContacts.putAll(map);
-
         } catch(Exception e) {
             e.printStackTrace();
         }
     }
-
 
     public void AlarmTestOnClicked(View view) {
         AlarmReceiver a=new AlarmReceiver();
