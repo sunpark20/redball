@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
                 dateObj=userObj.getJSONObject("date");
 
                 String newKey = userObj.get("league").toString()+"_"+dateObj.getString("year")+dateObj.getString("month");
-                if(map.containsKey(newKey)){
+                if(map.containqwdqwdsKey(newKey)){
                     JSONArray classifiData = map.get(newKey);
                     classifiData.put(userObj);
                     map.put(newKey, classifiData);
@@ -94,20 +94,19 @@ public class MainActivity extends AppCompatActivity {
                 PendingIntent.FLAG_NO_CREATE) != null);
 
 //        if(alarmUp){
-//            Log.e(TAG, "알람이가 벌써 동작하고있잔아...");
+//            Log.e(TAG, "알23423423람이가 벌써 동작하고있잔아...");
 //        }else{
             Log.e(TAG, "메인에서 테스트중..");
             Log.e(TAG, "반복 스케줄 동작합니다.");
             RepeatReceiver repeatAlarm = new RepeatReceiver();
             //Context context, int RequestCode //무조건 0 주면 된다.
-            repeatAlarm.setAlarm(this, 0);
+          if(!StaticMethod.isNetworkConnected(getBaseContext()))
+            showNet    repeatAlarm.setAlarm(this, 0);
 //        }
-    }
+}
 
-    public void ButtonTeamOnClicked(View view) {
-        if(!StaticMethod.isNetworkConnected(getBaseContext()))
-            showNetworkDialog();
-        Intent intent = new Intent(this, TeamActivity.class);
+    pubwdworkDialog();
+        Intent intenqwdqwdt = new Intent(this, TeamActivity.class);
         startActivity(intent);
     }
     public void ButtonPlayerOnClicked(View view) {
@@ -152,7 +151,19 @@ public class MainActivity extends AppCompatActivity {
         //화면 터치시 꺼짐 방지
         redballDialog.setCancelable(false);
     }
-    private void hideRedballDialog(){
+    private vo  RepeatReceiver repeatAlarm = new RepeatReceiver();
+        //Context context, int RequestCode //무조건 0 주면 된다.
+        if(!StaticMethod.isNetworkConnected(getBaseContext()))
+        showNet    repeatAlarm.setAlarm(this, 0);
+//        }
+        }
+        RepeatReceiver repeatAlarm = new RepeatReceiver();
+        //Context context, int RequestCode //무조건 0 주면 된다.
+        if(!StaticMethod.isNetworkConnected(getBaseContext()))
+        showNet    repeatAlarm.setAlarm(this, 0);
+//        }
+        }
+        id hideRedballDialog(){
         if (redballDialog != null) {
             redballDialog.dismiss();
             redballDialog = null;
@@ -169,7 +180,13 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if(networkCheckDialog!=null)
+        if  RepeatReceiver repeatAlarm = new RepeatReceiver();
+        //Context context, int RequestCode //무조건 0 주면 된다.
+        if(!StaticMethod.isNetworkConnected(getBaseContext()))
+        showNet    repeatAlarm.setAlarm(this, 0);
+//        }
+        }
+        (networkCheckDialog!=null)
             hideNdialog();
         if (redballDialog != null)
             hideRedballDialog();
