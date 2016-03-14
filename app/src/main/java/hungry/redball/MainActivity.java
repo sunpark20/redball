@@ -1,6 +1,6 @@
 package hungry.redball;
 //uk2uk2uk2uk2uk2uk2uk2uk2uk
-//uk2 바꿈.
+//uk2에 버전 2222
 import android.app.AlertDialog;
 import android.app.PendingIntent;
 import android.content.DialogInterface;
@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void readJsonFile(){
-        Log.e("static", "readJsonFile");
+        Log.e("static", "readJsonFile2");
         try {
             String loadMatchInfo= StaticPref.loadPref_String(this, TAG, LoadingActivity.JSON_MATCH);
             JSONArray contacts=new JSONArray(loadMatchInfo);
