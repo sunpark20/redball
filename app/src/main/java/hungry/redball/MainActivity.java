@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
     //networkCheck dialog
     private AlertDialog networkCheckDialog;
     //redball dialog
-    private RedballProgressDialog redballDialog;
+    private RedballProgressDialog redballDialog232321312312123;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void readJsonFile(){
-        Log.e("static", "readJsonFile222222222222222222");
+        Log.e("static", "readJsonFile");
         try {
             String loadMatchInfo= StaticPref.loadPref_String(this, TAG, LoadingActivity.JSON_MATCH);
             JSONArray contacts=new JSONArray(loadMatchInfo);
