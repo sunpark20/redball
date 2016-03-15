@@ -1,9 +1,7 @@
 package hungry.redball.player;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
@@ -22,6 +20,11 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
@@ -78,11 +81,35 @@ public class Frag_player extends Fragment{
         copiedRows.addAll(rows);
 
 	}
-
+    //test
+    ImageLoaderConfiguration config;
+    ImageLoader imageLoader;
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);
 		view = inflater.inflate(R.layout.fragment_player, container, false);
+
+        //test
+        //Get the imageloader.
+        ImageLoader imageLoader = ImageLoader.getInstance();
+
+        //Create image options.
+        DisplayImageOptions options = new DisplayImageOptions.Builder()
+                .cacheOnDisc()
+                .imageScaleType(ImageScaleType.IN_SAMPLE_POWER_OF_2)
+                .bitmapConfig(Bitmap.Config.RGB_565)
+                .build();
+
+        //Create a config with those options.
+        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(getActivity())
+                .defaultDisplayImageOptions(options)
+                .build();
+
+        //Initialise the imageloader.
+        imageLoader.init(config);
+
+
+
 		// if this is set true,
 		// Activity.onCreateOptionsMenu will call Fragment.onCreateOptionsMenu
 		// Activity.onOptionsItemSelected will call Fragment.onOptionsItemSelected
@@ -311,13 +338,22 @@ public class Frag_player extends Fragment{
             //row1
             //스피너의 정렬 따라 1,2,3,4 붙도록  (순위 개념)
             holder.r.setText(position + 1 + "");
-            //resize (flag)
+
+
+
+            String imageUri = "drawable://" + R.drawable.pre_chelsea; // from drawables (only images, non-9patch)
+
+          /*  //resize (flag)
             Resources res=context.getResources();
             BitmapFactory.Options options = new BitmapFactory.Options();
             options.inSampleSize = 2;
             int id=rows.get(position).getFlag();
             Bitmap src=BitmapFactory.decodeResource(res, id, options);
-            holder.flag.setImageBitmap(src);
+            //바꾸는 중
+            holder.flag.setImageBitmap(src);*/
+
+            ImageLoader.getInstance().displayImage(imageUri, holder.flag);
+
             holder.name.setText(rows.get(position).getName());
             //row2
             holder.team.setText(rows.get(position).getTeam());
@@ -375,6 +411,8 @@ public class Frag_player extends Fragment{
         }
 
     }
+
+
 
     @Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -457,6 +495,9 @@ public class Frag_player extends Fragment{
 			}
 		});
 	}
+
+
+
 }
 //골랐을 떄 동작하는 것 일단 나둡시당 안쓰지만 ㅇ리단 주석
 //	@Override

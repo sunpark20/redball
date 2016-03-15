@@ -165,13 +165,13 @@ public class LoadingActivity extends AppCompatActivity {
                 break;
         }
         //선수 로딩 막음(주석제거)
-     /*   if(count>=PROGRESS_NUM)
-            startActivity();*/
-        //선수 로딩 막음(주석)
-        if(count>=3)
+        if(count>=PROGRESS_NUM)
             startActivity();
-
+       /* //선수 로딩 막음(주석)
+        if(count>=3)
+            startActivity();*/
     }
+
     private void startActivity(){
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
@@ -210,7 +210,6 @@ public class LoadingActivity extends AppCompatActivity {
         String date=StaticPref.loadPref_String(this, TAG, StaticPref.PLAYER_DATE);
         Log.e(TAG, date.toString());
 
-        /*
         //선수 로딩 막음(주석제거)
         if(date.compareTo("defValue")==0){
             tv.append("최초 접속시 선수정보를 다운(약 1분 소요)\n");
@@ -222,7 +221,7 @@ public class LoadingActivity extends AppCompatActivity {
                     .setNegativeButton("아니요", dialogClickListener).show();
             TextView textView = (TextView) dialog.findViewById(android.R.id.message);
             textView.setTextSize(25);
-        }*/
+        }
     }
 
     private void scoreUpdate()throws Exception{
@@ -359,7 +358,6 @@ public class LoadingActivity extends AppCompatActivity {
             }catch (IOException e) {
                 Log.e(TAG, "connection_error");
             }
-
             return result;
         }
 

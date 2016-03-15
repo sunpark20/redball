@@ -37,4 +37,5 @@ dependencies {
     compile 'com.google.code.gson:gson:2.5'
     compile 'joda-time:joda-time:2.9.2'
     compile files('libs/mongo-2.10.1.jar')
+    compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
 }
