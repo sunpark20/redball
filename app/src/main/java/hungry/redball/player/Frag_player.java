@@ -339,9 +339,9 @@ public class Frag_player extends Fragment{
             //스피너의 정렬 따라 1,2,3,4 붙도록  (순위 개념)
             holder.r.setText(position + 1 + "");
 
-
-
-            String imageUri = "drawable://" + R.drawable.pre_chelsea; // from drawables (only images, non-9patch)
+            //universal 이미지 로딩 쓴거
+            int id=rows.get(position).getFlag();
+            String imageUri = "drawable://" + id; // from drawables (only images, non-9patch)
 
           /*  //resize (flag)
             Resources res=context.getResources();
@@ -352,6 +352,7 @@ public class Frag_player extends Fragment{
             //바꾸는 중
             holder.flag.setImageBitmap(src);*/
 
+            //universal 이미지 로딩 쓴거
             ImageLoader.getInstance().displayImage(imageUri, holder.flag);
 
             holder.name.setText(rows.get(position).getName());

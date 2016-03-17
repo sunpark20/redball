@@ -33,6 +33,10 @@ public class QueryBuilder_loading {
 		return "fictures?";
 	}
 
+	public String buildTotalUrl ()
+	{
+		return getBaseUrl()+documentRequest()+"l=2000&"+docApiKeyUrl();
+	}
 	public String buildScoreUrl ()
 	{
 		return getBaseUrl()+documentRequest()+q()+f()+docApiKeyUrl();
@@ -41,7 +45,7 @@ public class QueryBuilder_loading {
 	{
 		return getBaseUrl()+documentRequest()
 				+"q={'date.year':'2016'}&"
-				+"f={\"code\":1,\"date\":1,\"time\":1}&"
+				+"f={\"code\":1,\"date\":1,\"time\":1,\"score\":1}&"
 				+docApiKeyUrl();
 	}
 

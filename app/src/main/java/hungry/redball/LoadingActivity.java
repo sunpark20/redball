@@ -2,7 +2,6 @@ package hungry.redball;
 
 
 import android.app.AlertDialog;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -27,15 +26,14 @@ import java.io.InputStreamReader;
 import java.lang.ref.WeakReference;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.concurrent.CountDownLatch;
 
 import hungry.redball.aStatic.StaticMethod;
 import hungry.redball.aStatic.StaticPref;
 import hungry.redball.alram.PrefActivity;
-import hungry.redball.alram.RepeatReceiver;
 import hungry.redball.player.url.Thread_league;
 import hungry.redball.player.url.Url_player_sub;
 import hungry.redball.team.url.Url_team_thread;
@@ -57,11 +55,15 @@ public class LoadingActivity extends AppCompatActivity {
     public static final String JSON_MATCH="JSON_MATCH";
     private boolean enterFromNotify;
 
-    private final int PROGRESS_NUM=8;
+    private final int PROGRESS_NUM=7;
     private final int PROGRESS_INT=(100/PROGRESS_NUM) + 1;
     //프로그래스바
     private int value = 0;
     private ProgressBar progBar;
+
+    //몽고db와 동기화 제어하는 countDownLatch
+    CountDownLatch latch1 = new CountDownLatch(1);
+    JSONArray FixJsonArray=null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,7 +86,7 @@ public class LoadingActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        //노티피에서 왔는지 확인.
+      /*  //노티피에서 왔는지 확인.
         try{
             Intent nIntent = getIntent();
             if (nIntent.getAction().equals("ACTION_NOTIFICATION")){
@@ -95,11 +97,11 @@ public class LoadingActivity extends AppCompatActivity {
             }
         }catch (Exception e){
             Log.e(TAG,"걍 넘겨");
-        }
+        }*/
 
-        if(!enterFromNotify) {
+       /* if(!enterFromNotify) {
             download();
-            Intent intent = new Intent(this, RepeatReceiver.class);
+            Intent intent = new Intent(this, Receiver.class);
             boolean alarmUp = (PendingIntent.getBroadcast(this, 0,
                     intent,
                     PendingIntent.FLAG_NO_CREATE) != null);
@@ -111,7 +113,7 @@ public class LoadingActivity extends AppCompatActivity {
                 //Context context, int RequestCode //무조건 0 주면 된다.
                 repeatAlarm.setAlarm(this, 0);
             }
-        }
+        }*/
     }
     //end of onCreate
 
@@ -152,24 +154,21 @@ public class LoadingActivity extends AppCompatActivity {
             case 11:
                 tv.append(msg.what+"team  complete"+count*PROGRESS_INT+"%\n");
                 break;
-            case 12:
+            case 13:
                 if(enterFromNotify) //스코어 받으면 진입하려고 여기 있는거네.
                     startPrefActivity();
-                tv.append(msg.what+"score   complete"+count*PROGRESS_INT+"%\n");
-                break;
-            case 13:
                 tv.append(msg.what+"date   complete"+count*PROGRESS_INT+"%\n");
                 break;
             default:
                 tv.append(msg.what+"player  complete"+count*PROGRESS_INT+"%\n");
                 break;
         }
-        //선수 로딩 막음(주석제거)
+        /*//선수 로딩 막음(주석제거)
         if(count>=PROGRESS_NUM)
-            startActivity();
-       /* //선수 로딩 막음(주석)
-        if(count>=3)
             startActivity();*/
+        //선수 로딩 막음(주석)
+        if(count>=1)
+            startActivity();
     }
 
     private void startActivity(){
@@ -210,7 +209,7 @@ public class LoadingActivity extends AppCompatActivity {
         String date=StaticPref.loadPref_String(this, TAG, StaticPref.PLAYER_DATE);
         Log.e(TAG, date.toString());
 
-        //선수 로딩 막음(주석제거)
+       /* //선수 로딩 막음(주석제거)
         if(date.compareTo("defValue")==0){
             tv.append("최초 접속시 선수정보를 다운(약 1분 소요)\n");
             downPlayer();
@@ -221,63 +220,30 @@ public class LoadingActivity extends AppCompatActivity {
                     .setNegativeButton("아니요", dialogClickListener).show();
             TextView textView = (TextView) dialog.findViewById(android.R.id.message);
             textView.setTextSize(25);
-        }
+        }*/
     }
 
-    private void scoreUpdate()throws Exception{
+    private void scoreUpdate() throws Exception{
         String loadMatchInfo=StaticPref.loadPref_String(this,TAG,JSON_MATCH);
-        JSONArray ja=null;
-        int count=0;
-
+        //최초 로딩시, 그 다음 접속 구분해서 fixtures틀 만들기
         if(loadMatchInfo.compareTo("defValue")==0){
-            Log.e(TAG,"PHASE1:SCORE pref-JSON_MATCH 없음 asset에서 로드");
-            String temp=StaticMethod.loadJSONFromAsset("matchinfo.json", this);
-            ja=new JSONArray(temp);
+            Log.e(TAG, "Fixtures Thread1-Total start download from mongoDB");
+            new Thread_query_total(this).execute();
         }else{
-            Log.e(TAG,"PHASE1:SCORE pref-JSON_MATCH 업데이트");
-            Log.e(TAG, loadMatchInfo.toString());
-            ja=new JSONArray(loadMatchInfo);
+            Log.e(TAG,"Fixtures Thread1-Total start load from sharedPreference");
+            FixJsonArray=new JSONArray(loadMatchInfo);
+            latch1.countDown();
         }
-
-        Calendar nCal=Calendar.getInstance();
-
-        ArrayList<Integer> codeArray=new ArrayList<Integer>();
-
-        for(int i=0;i<ja.length();i++){
-            JSONObject jo=ja.getJSONObject(i);
-            String score=jo.get("score").toString();
-
-            Calendar jCal=StaticMethod.setJsonCal(jo);
-
-            if(score.compareTo("vs")==0 //조건1. score값이 비어 있을 때
-                    && jCal.compareTo(nCal)==-1){ //조건2. 현재시간과 json시간을 비교
-                int code=(int)jo.get("code");
-                codeArray.add(code);
-                count++;
-            }
-        }
-        //먼저 date를 채워줌. 순서중요. 이거하고 나서 score해야 한번에 최신으로 됨.
-        Log.e(TAG,"2016 date를 전부 업데이트 합니다(최적화필요)");
-        new Thread_query_date(this, ja).execute();
-
-        Log.e(TAG,"스코어가 "+ count + "만큼 비어있습니다.");
-        if(count>0) {
-            QueryBuilder_loading.codeArray = codeArray;
-            new Thread_query_score(this, ja).execute();
-        }else{
-            LoadingActivity.mHandler.sendMessage(LoadingActivity.mHandler.obtainMessage(12));
-        }
-
+        Log.e(TAG, "Fixtures Thread2-Date start (2016년을 전부 업데이트하기 떄문에 최적화필요)");
+        new Thread_query_date(this).execute();
     }
 
-    //1. start query_score class
-    class Thread_query_score extends AsyncTask<String, Void, String> {
+    //0. start query_total class
+    class Thread_query_total extends AsyncTask<String, Void, String> {
         Context context;
         String result ="";
-        JSONArray ja;
 
-        public Thread_query_score(Context context, JSONArray ja){
-            this.ja=ja;
+        public Thread_query_total(Context context){
             this.context=context;
         }
 
@@ -285,68 +251,47 @@ public class LoadingActivity extends AppCompatActivity {
         protected String doInBackground(String... arg0) {
 
             QueryBuilder_loading qb = new QueryBuilder_loading();
-            String urlString=qb.buildScoreUrl();
+            String urlString=qb.buildTotalUrl();
             //보낸 url api 주소 확인
-            Log.e(TAG, urlString);
+            Log.e(TAG, "Thread_query_total의 URL: "+urlString);
 
             try {
                 result = loadFromNetwork(urlString);
+                FixJsonArray=new JSONArray(result);
             }catch (IOException e) {
                 Log.e(TAG, "connection_error");
+            }catch (Exception e){
+                e.printStackTrace();
             }
-
             return result;
         }
 
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
-            //result는 mongo에서 받아온것
-            //그냥 jo,ja는 저장할것.
-            Log.e(TAG, result);
-            try{
-                JSONArray result_ja=new JSONArray(result);
-
-                for(int i=0;i<result_ja.length();i++){
-                    JSONObject result_jo=result_ja.getJSONObject(i);
-                    String result_code=result_jo.get("code").toString();
-                    for(int j=0;j<ja.length();j++) {
-                        JSONObject jo=ja.getJSONObject(j);
-                        String code=jo.get("code").toString();
-
-                        if(code.compareTo(result_code)==0){
-                            String score=result_jo.get("score").toString();
-
-                            //추측. 여기서 에러가 나는듯 하다.. score가 한번씩 비어 있나우?
-                            if(score.compareTo("")!=0)
-                                ja.getJSONObject(j).put("score", score);
-                            else
-                                System.out.println("이건 비어 있으면 안되는디우??"+code+score);
-                            break;
-                        }
-                    }
-                }
-                StaticPref.savePref_String(context, TAG, ja.toString(), JSON_MATCH);
-            }catch (Exception e){
-                e.printStackTrace();
-            }
-            LoadingActivity.mHandler.sendMessage(LoadingActivity.mHandler.obtainMessage(12));
+            System.out.println("Thread_query_total complete");
+            latch1.countDown();
         }
+
     }//END query_score class
 
     //2. start query_date class
     class Thread_query_date extends AsyncTask<String, Void, String> {
         Context context;
         String result ="";
-        JSONArray ja;
 
-        public Thread_query_date(Context context, JSONArray ja){
-            this.ja=ja;
+        public Thread_query_date(Context context){
             this.context=context;
         }
 
         @Override
         protected String doInBackground(String... arg0) {
+
+            try{
+                latch1.await();
+            }catch (Exception e){
+                e.printStackTrace();
+            }
 
             //임시-2016년것 다 받아오기 (최적화 필요)
             QueryBuilder_loading qb = new QueryBuilder_loading();
@@ -364,15 +309,15 @@ public class LoadingActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
-//            System.out.println("내가 보고 싶은 결과");
             try{
                 JSONArray result_ja=new JSONArray(result);
                 for(int i=0;i<result_ja.length();i++){
                     JSONObject result_jo=result_ja.getJSONObject(i);
                     String result_code=result_jo.get("code").toString();
+
 //                    System.out.println(result_jo.toString());
-                    for(int j=0;j<ja.length();j++) {
-                        JSONObject jo=ja.getJSONObject(j);
+                    for(int j=0;j<FixJsonArray.length();j++) {
+                        JSONObject jo=FixJsonArray.getJSONObject(j);
                         String code=jo.get("code").toString();
                         if(code.compareTo(result_code)==0){
                             //이전 날짜랑 오늘 날짜랑 비교하자.
@@ -410,24 +355,29 @@ public class LoadingActivity extends AppCompatActivity {
                             //이제 time 이랑 date 다 넣을꺼다.
                             //time 넣기
                             if(time.compareTo("")!=0)
-                                ja.getJSONObject(j).put("time", time);
+                                FixJsonArray.getJSONObject(j).put("time", time);
                             else
                                 System.out.println("이건 비어 있으면 안되는디우??"+code+time);
 
                             //date넣기
                             if(date.toString().compareTo("")!=0)
-                                ja.getJSONObject(j).put("date", date);
+                                FixJsonArray.getJSONObject(j).put("date", date);
                             else
                                 System.out.println("이건 비어 있으면 안되는디우??"+code+date);
+
+                            //score넣기
+                            FixJsonArray.getJSONObject(j).put("score", result_jo.get("score"));
+
                             break;
                         }
                     }
-                }
+                } //end for
+
             }catch (Exception e){
                 e.printStackTrace();
             }
-
-            StaticPref.savePref_String(context, TAG, ja.toString(), JSON_MATCH);
+            Log.e(TAG, "Fixtures Thread2-Date complete");
+            StaticPref.savePref_String(context, TAG, FixJsonArray.toString(), JSON_MATCH);
             LoadingActivity.mHandler.sendMessage(LoadingActivity.mHandler.obtainMessage(13));
         }
     }//END query_date class

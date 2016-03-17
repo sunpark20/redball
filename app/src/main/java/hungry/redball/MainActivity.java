@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
                 dateObj=userObj.getJSONObject("date");
 
                 String newKey = userObj.get("league").toString()+"_"+dateObj.getString("year")+dateObj.getString("month");
-                if(map.containsKey(newKey)){
+                if(map.containsKey(newKey)) {
                     JSONArray classifiData = map.get(newKey);
                     classifiData.put(userObj);
                     map.put(newKey, classifiData);
