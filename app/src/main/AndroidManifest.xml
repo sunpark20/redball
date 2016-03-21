@@ -27,7 +27,8 @@
 
         <activity
             android:name=".LoadingActivity"
-            android:label="로딩액티비티">
+            android:label="로딩액티비티"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

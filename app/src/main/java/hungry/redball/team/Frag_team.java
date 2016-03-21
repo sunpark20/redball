@@ -70,8 +70,14 @@ public class Frag_team extends Fragment {
 		position = getArguments().getInt(ARG_POSITION);
 		flag=new FlagHashMap(); //깃발 정보 불러오기
 		flag.makeHashMap();
-		teamName=new String[StaticMethod.jArr_team[position].length()];//온클릭 리스너에서 팀이름 보여주기
-		loadTeam(); //팀정보 불러오기
+
+		// java.lang.NullPointerException이 떠서 일단 넣어놈
+		try{
+			teamName=new String[StaticMethod.jArr_team[position].length()];//온클릭 리스너에서 팀이름 보여주기
+			loadTeam(); //팀정보 불러오기
+		}catch (Exception e){
+			e.printStackTrace();
+		}
 	}
 
 

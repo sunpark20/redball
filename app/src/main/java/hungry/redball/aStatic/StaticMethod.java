@@ -134,5 +134,16 @@ public class StaticMethod {
         return cal;
     }
 
+    public static JSONArray RemoveJSONArray( JSONArray jarray,int pos) {
+
+        JSONArray Njarray=new JSONArray();
+        try{
+            for(int i=0;i<jarray.length();i++){
+                if(i!=pos)
+                    Njarray.put(jarray.get(i));
+            }
+        }catch (Exception e){e.printStackTrace();}
+        return Njarray;
+    }
 
 }

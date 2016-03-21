@@ -81,10 +81,7 @@ public class MainActivity extends AppCompatActivity {
         AlarmReceiver a=new AlarmReceiver();
         a.cancelAlarm(this, 9999);
     }
-    public void downTestOnClicked(View view) {
-        LoadingActivity l=new LoadingActivity();
-        l.download();
-    }
+
     public void ButtonTestOnClicked(View view) {
 
         Intent intent = new Intent(this, RepeatReceiver.class);

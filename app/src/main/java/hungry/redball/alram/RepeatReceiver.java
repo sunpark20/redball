@@ -297,6 +297,8 @@ public class RepeatReceiver extends WakefulBroadcastReceiver {
         }
     }
     //END INCLUDE(setAlarmFromJson)
+
+    //경기 후 알람도 바로 오게 하는 메소드
     private long testSet(Calendar c_json, Calendar c_now){
         return c_json.getTimeInMillis()-c_now.getTimeInMillis()-1000*60*19;
     }

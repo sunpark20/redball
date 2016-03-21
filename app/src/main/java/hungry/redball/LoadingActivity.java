@@ -2,6 +2,7 @@ package hungry.redball;
 
 
 import android.app.AlertDialog;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -14,8 +15,6 @@ import android.util.Log;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.mongodb.BasicDBObject;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -26,40 +25,35 @@ import java.io.InputStreamReader;
 import java.lang.ref.WeakReference;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
-import java.util.HashMap;
 import java.util.concurrent.CountDownLatch;
 
 import hungry.redball.aStatic.StaticMethod;
 import hungry.redball.aStatic.StaticPref;
 import hungry.redball.alram.PrefActivity;
-import hungry.redball.player.url.Thread_league;
-import hungry.redball.player.url.Url_player_sub;
-import hungry.redball.team.url.Url_team_thread;
+import hungry.redball.alram.RepeatReceiver;
 import hungry.redball.util.QueryBuilder_loading;
 
 public class LoadingActivity extends AppCompatActivity {
-    //경기일정
-    private HashMap<String,JSONArray> map = new HashMap<String,JSONArray>();
-    static public BasicDBObject newContacts = new BasicDBObject();
 
     private final String TAG="LoadingActivity";
 
     //networkCheck dialog
     private AlertDialog networkCheckDialog;
 
-    private TextView tv;
-    public static MyHandler mHandler;
-    int count=0;
     public static final String JSON_MATCH="JSON_MATCH";
     private boolean enterFromNotify;
 
-    private final int PROGRESS_NUM=7;
-    private final int PROGRESS_INT=(100/PROGRESS_NUM) + 1;
     //프로그래스바
+    private TextView tv;
+    public static MyHandler mHandler;
+    private final int PROGRESS_NUM=3;
+    private final int PROGRESS_INT=(100/PROGRESS_NUM) + 1;
     private int value = 0;
     private ProgressBar progBar;
+    int myHandlerCount=0;
 
     //몽고db와 동기화 제어하는 countDownLatch
     CountDownLatch latch1 = new CountDownLatch(1);
@@ -69,24 +63,25 @@ public class LoadingActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_loading);
-
         tv =(TextView)findViewById(R.id.textView);
         progBar= (ProgressBar)findViewById(R.id.progBar1);
+
+        if(!StaticMethod.isNetworkConnected(getBaseContext()))
+            showNetworkDialog();
 
         mHandler= new MyHandler(this);
         progressWork();
 
-        // ssl exception 실험
-        //new testThred2().execute();
-
-        //PHASE1:SCORE  이거할때 date도 같이 해버리자
+        //FixturesUpdate에서 capsulation: total->date->>result3뺴기-> serviceUp
+        // (date의 onpost에서 result3과 serviceup실행해줌)
+        // 개판소스인데 고치고싶다.
         try{
-            scoreUpdate();
+            FixturesUpdate();
         }catch (Exception e){
             e.printStackTrace();
         }
 
-      /*  //노티피에서 왔는지 확인.
+        //노티피에서 왔냐 안왔냐? capsul-1
         try{
             Intent nIntent = getIntent();
             if (nIntent.getAction().equals("ACTION_NOTIFICATION")){
@@ -96,26 +91,32 @@ public class LoadingActivity extends AppCompatActivity {
                 return;
             }
         }catch (Exception e){
-            Log.e(TAG,"걍 넘겨");
-        }*/
+            Log.e(TAG, "걍 넘겨");
+        }
 
-       /* if(!enterFromNotify) {
-            download();
-            Intent intent = new Intent(this, Receiver.class);
-            boolean alarmUp = (PendingIntent.getBroadcast(this, 0,
-                    intent,
-                    PendingIntent.FLAG_NO_CREATE) != null);
-            if(alarmUp){
-                Log.e(TAG, "알람이가 동작중");
-            }else{
-                Log.e(TAG, "알람이 부팅에서 안켜졌네. 여기서 킵니다.");
-                RepeatReceiver repeatAlarm = new RepeatReceiver();
-                //Context context, int RequestCode //무조건 0 주면 된다.
-                repeatAlarm.setAlarm(this, 0);
-            }
-        }*/
+        //노티피에서 왔냐 안왔냐? capsul-2
+        //$문제소스 플레이어 다운 하루간격 11로 체크해서 다운받기
+        if(!enterFromNotify) {
+            tv.append("최초 접속시 선수정보를 다운(최대 1분 소요)\n");
+            new Thread_player(this).execute();
+        }
+
     }
-    //end of onCreate
+
+    private void serviceUp(){
+        Intent intent = new Intent(this, RepeatReceiver.class);
+        boolean alarmUp = (PendingIntent.getBroadcast(this, 0,
+                intent,
+                PendingIntent.FLAG_NO_CREATE) != null);
+        if(alarmUp){
+            Log.e(TAG, "알람이가 동작중");
+        }else{
+            Log.e(TAG, "알람이 부팅에서 안켜졌네. 여기서 킵니다.");
+            RepeatReceiver repeatAlarm = new RepeatReceiver();
+            //Context context, int RequestCode //무조건 0 주면 된다.
+            repeatAlarm.setAlarm(this, 0);
+        }
+    }
 
     private void progressWork(){
         // Start lengthy operation in a background thread
@@ -124,7 +125,7 @@ public class LoadingActivity extends AppCompatActivity {
                 while (value < 100) {
                     // Update the progress bar
                     mHandler.post(new Runnable() {
-                        int limit=(count)*PROGRESS_INT;
+                        int limit=(myHandlerCount)*PROGRESS_INT;
                         public void run() {
                             if (value < limit) {
                                 value += 1;
@@ -144,31 +145,29 @@ public class LoadingActivity extends AppCompatActivity {
     }
 
     private void myHandleMessage(Message msg) {
-        count++;
-        Log.e("LoadingActivity", "count: " + count + " " + "msg: " + msg.what);
+        myHandlerCount++;
+        Log.e("LoadingActivity", "count: " + myHandlerCount + " " + "msg: " + msg.what);
         switch (msg.what) {
             case 999:
                 tv.append("오류 발생. 네트워크환경체크 후 재접속 해주세요.\n");
-                count--;
+                myHandlerCount--;
                 break;
-            case 11:
-                tv.append(msg.what+"team  complete"+count*PROGRESS_INT+"%\n");
+            case 1:
+                tv.append(msg.what+"fixtures total  complete"+myHandlerCount*PROGRESS_INT+"%\n");
                 break;
-            case 13:
+            case 2:
                 if(enterFromNotify) //스코어 받으면 진입하려고 여기 있는거네.
                     startPrefActivity();
-                tv.append(msg.what+"date   complete"+count*PROGRESS_INT+"%\n");
+                tv.append(msg.what+"fixtures date  complete"+myHandlerCount*PROGRESS_INT+"%\n");
                 break;
-            default:
-                tv.append(msg.what+"player  complete"+count*PROGRESS_INT+"%\n");
+            case 3:
+                tv.append(msg.what+"player  complete"+myHandlerCount*PROGRESS_INT+"%\n");
                 break;
         }
-        /*//선수 로딩 막음(주석제거)
-        if(count>=PROGRESS_NUM)
-            startActivity();*/
-        //선수 로딩 막음(주석)
-        if(count>=1)
+        //선수 로딩 막음(주석제거)
+        if(myHandlerCount>=PROGRESS_NUM)
             startActivity();
+        //선수 로딩 막음(주석)
     }
 
     private void startActivity(){
@@ -176,6 +175,7 @@ public class LoadingActivity extends AppCompatActivity {
         startActivity(intent);
         this.finish();
     }
+
     private void startPrefActivity(){
         Intent intent = new Intent(this, PrefActivity.class);
         startActivity(intent);
@@ -198,47 +198,24 @@ public class LoadingActivity extends AppCompatActivity {
         }
     }
 
-    public void download(){
-        if(!StaticMethod.isNetworkConnected(getBaseContext()))
-            showNetworkDialog();
-
-        //팀 다운
-        for(int i=0;i<5;i++)
-                new Url_team_thread().execute(i);
-
-        String date=StaticPref.loadPref_String(this, TAG, StaticPref.PLAYER_DATE);
-        Log.e(TAG, date.toString());
-
-       /* //선수 로딩 막음(주석제거)
-        if(date.compareTo("defValue")==0){
-            tv.append("최초 접속시 선수정보를 다운(약 1분 소요)\n");
-            downPlayer();
-        }else{
-            AlertDialog dialog = new AlertDialog.Builder(this)
-                    .setMessage("선수 정보 날짜\n"+date+"\n\n업데이트 하시겠습니까\n   약1.5mb소모")
-                    .setPositiveButton("네", dialogClickListener)
-                    .setNegativeButton("아니요", dialogClickListener).show();
-            TextView textView = (TextView) dialog.findViewById(android.R.id.message);
-            textView.setTextSize(25);
-        }*/
-    }
-
-    private void scoreUpdate() throws Exception{
+    private void FixturesUpdate() throws Exception{
         String loadMatchInfo=StaticPref.loadPref_String(this,TAG,JSON_MATCH);
         //최초 로딩시, 그 다음 접속 구분해서 fixtures틀 만들기
-        if(loadMatchInfo.compareTo("defValue")==0){
-            Log.e(TAG, "Fixtures Thread1-Total start download from mongoDB");
+        if(loadMatchInfo.compareTo("defValue")==0) {
+            Log.e(TAG, "Fixtures Thread1-Total start download from mongoDB(2016년만받음)");
             new Thread_query_total(this).execute();
         }else{
-            Log.e(TAG,"Fixtures Thread1-Total start load from sharedPreference");
+            Log.e(TAG, "Fixtures Thread1-Total start load from sharedPreference");
             FixJsonArray=new JSONArray(loadMatchInfo);
+            LoadingActivity.mHandler.sendMessage(LoadingActivity.mHandler.obtainMessage(1));
             latch1.countDown();
         }
         Log.e(TAG, "Fixtures Thread2-Date start (2016년을 전부 업데이트하기 떄문에 최적화필요)");
+        //$문제소스 json끼리 검색할때 엄청오래걸림.
         new Thread_query_date(this).execute();
     }
 
-    //0. start query_total class
+    //0. start query_total thread class
     class Thread_query_total extends AsyncTask<String, Void, String> {
         Context context;
         String result ="";
@@ -257,11 +234,8 @@ public class LoadingActivity extends AppCompatActivity {
 
             try {
                 result = loadFromNetwork(urlString);
-                FixJsonArray=new JSONArray(result);
             }catch (IOException e) {
                 Log.e(TAG, "connection_error");
-            }catch (Exception e){
-                e.printStackTrace();
             }
             return result;
         }
@@ -269,13 +243,19 @@ public class LoadingActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
-            System.out.println("Thread_query_total complete");
+            try{
+                FixJsonArray=new JSONArray(result);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+            Log.e(TAG, "Fixtures Thread-Total complete");
+            LoadingActivity.mHandler.sendMessage(LoadingActivity.mHandler.obtainMessage(1));
             latch1.countDown();
         }
 
     }//END query_score class
 
-    //2. start query_date class
+    //1. start query_date thread class
     class Thread_query_date extends AsyncTask<String, Void, String> {
         Context context;
         String result ="";
@@ -367,7 +347,6 @@ public class LoadingActivity extends AppCompatActivity {
 
                             //score넣기
                             FixJsonArray.getJSONObject(j).put("score", result_jo.get("score"));
-
                             break;
                         }
                     }
@@ -376,11 +355,112 @@ public class LoadingActivity extends AppCompatActivity {
             }catch (Exception e){
                 e.printStackTrace();
             }
-            Log.e(TAG, "Fixtures Thread2-Date complete");
+            Log.e(TAG, "Fixtures Thread-Date complete");
+
             StaticPref.savePref_String(context, TAG, FixJsonArray.toString(), JSON_MATCH);
-            LoadingActivity.mHandler.sendMessage(LoadingActivity.mHandler.obtainMessage(13));
+            serviceUp();
+            LoadingActivity.mHandler.sendMessage(LoadingActivity.mHandler.obtainMessage(2));
         }
     }//END query_date class
+
+    //0-1. start query_total thread class
+    class Thread_player extends AsyncTask<String, Void, String> {
+        Context context;
+        String result ="";
+
+        public Thread_player(Context context){
+            this.context=context;
+        }
+
+        @Override
+        protected String doInBackground(String... arg0) {
+
+            QueryBuilder_loading qb = new QueryBuilder_loading();
+            String urlString=qb.buildPlayerUrl();
+            //보낸 url api 주소 확인
+            Log.e(TAG, "Thread_player의 URL: "+urlString);
+
+            try {
+                result = loadFromNetwork(urlString);
+            }catch (IOException e) {
+                Log.e(TAG, "connection_error");
+            }
+            return result;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+            String[] leagueName={
+                    "Premier League",
+                    "La Liga",
+                    "Bundesliga",
+                    "Serie A",
+                    "Ligue 1",
+            };
+
+            ArrayList<String> temp=new ArrayList<String>();
+            JSONArray[] resultJa=new JSONArray[5];
+            try{
+                //init resultJa
+                for(int i=0;i<resultJa.length;i++)
+                    resultJa[i]=new JSONArray();
+
+                JSONArray ja=new JSONArray(result);
+
+                for(int i = 0;i<ja.length();i++){
+                    JSONObject jo=ja.getJSONObject(i);
+                    for(int j=0;j<5;j++){
+                        if(jo.get("tournamentName").toString().compareTo(leagueName[j])==0)
+                            resultJa[j].put(jo);
+                    } //end for-j
+                } //end for-i
+
+                for(int j=0;j<temp.size();j++)
+                    System.out.println(temp.get(j));
+
+                for(int j=0;j<5;j++) {
+                    System.out.println(resultJa[j].length());
+                    String key="p"+j;
+                    StaticPref.savePref_String(getApplicationContext(),
+                            TAG, resultJa[j].toString(), key);
+                    StaticMethod.jArr[j]=resultJa[j];
+                }
+
+
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+            Log.e(TAG, "Player Thread complete");
+            LoadingActivity.mHandler.sendMessage(LoadingActivity.mHandler.obtainMessage(3));
+        }
+    }//END query_score class
+
+    //0-2. (다운안받아도 될 경우에, pref에서 선수데이터 로드)
+    class Thread_player_prefLoad extends AsyncTask< Void, Void, Void> {
+        Context c;
+        public Thread_player_prefLoad(Context c){
+            this.c=c;
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            try{
+                Log.e("LoadingActivity", "shared를 불러옵니다.");
+                for(int i=0;i<5;i++){
+                    String key="p"+i;
+                    String temp=StaticPref.loadPref_String(c, TAG, key);
+                    JSONArray ja=new JSONArray(temp.toString());
+                    StaticMethod.jArr[i]=ja;
+                    Log.e("데이터확인", ja.length() + ja.toString());
+                }
+                LoadingActivity.mHandler.sendMessage(LoadingActivity.mHandler.obtainMessage(3));
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+            return null;
+        }
+    }
 
     /** Given a URL string, initiate a fetch operation. */
     private String loadFromNetwork(String urlString) throws IOException {
@@ -426,47 +506,6 @@ public class LoadingActivity extends AppCompatActivity {
         return stream;
     }
 
-    private JSONArray RemoveJSONArray( JSONArray jarray,int pos) {
-        JSONArray Njarray = new JSONArray();
-        try {
-            for (int i = 0; i < jarray.length(); i++) {
-                if (i != pos)
-                    Njarray.put(jarray.get(i));
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return Njarray;
-    }
-
-    private void downPlayer(){
-        try{
-            new Thread_league(this, 0).execute(Url_player_sub.PRE);
-            new Thread_league(this, 1).execute(Url_player_sub.LALIGA);
-            new Thread_league(this, 2).execute(Url_player_sub.BUNDES);
-            new Thread_league(this, 3).execute(Url_player_sub.SERIE);
-            new Thread_league(this, 4).execute(Url_player_sub.LIGUE1);
-
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-    }
-
-    DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
-        @Override
-        public void onClick(DialogInterface dialog, int which) {
-            switch (which){
-                case DialogInterface.BUTTON_POSITIVE:
-                    downPlayer();
-                    break;
-
-                case DialogInterface.BUTTON_NEGATIVE:
-                    new Thread_prefLoad(getApplicationContext()).execute();
-                    break;
-            }
-        }
-    };
-
     private void showNetworkDialog(){
         networkCheckDialog=new AlertDialog.Builder(this)
                 .setIcon(android.R.drawable.ic_dialog_alert)
@@ -493,31 +532,5 @@ public class LoadingActivity extends AppCompatActivity {
 
 }
 
-//AsyncTask<Param, Progress, Result>
-class Thread_prefLoad extends AsyncTask< Void, Void, Void> {
-    private final String TAG="LoadingActivity";
 
-    Context c;
-    public Thread_prefLoad(Context c){
-        this.c=c;
-    }
-
-    @Override
-    protected Void doInBackground(Void... params) {
-        try{
-            Log.e("LoadingActivity", "shared를 불러옵니다.");
-            for(int i=0;i<5;i++){
-                String key="p"+i;
-                String temp=StaticPref.loadPref_String(c, TAG, key);
-                JSONArray ja=new JSONArray(temp.toString());
-                StaticMethod.jArr[i]=ja;
-                Log.e("데이터확인", ja.length() + ja.toString());
-                LoadingActivity.mHandler.sendMessage(LoadingActivity.mHandler.obtainMessage(i));
-            }
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-        return null;
-    }
-}
 

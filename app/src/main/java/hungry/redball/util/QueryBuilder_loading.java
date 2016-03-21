@@ -33,9 +33,19 @@ public class QueryBuilder_loading {
 		return "fictures?";
 	}
 
+	public String buildPlayerUrl ()
+	{
+		return getBaseUrl()+"players?"+"l=2000&"
+				+"f={\"_id\":0,\"positionText\":0,\"rating\":0,\"playerId\":0,\"teamId\":0,\"playedPositions\":0,\"isOpta\":0,\"subOn\":0,\"tournamentShortName\":0,\"tournamentRegionId\":0,\"regionCode\":0,\"tournamentRegionCode\":0,\"accurateThroughBallPerGame\":0,\"seasonId\":0,\"ranking\":0,\"minsPlayed\":0,\"offsideWonPerGame\":0,\"wasDribbledPerGame\":0,\"isActive\":0,\"firstName\":0,\"lastName\":0,\"seasonName\":0,\"tournamentId\":0,\"isManOfTheMatch\":0}&"
+				+docApiKeyUrl();
+	}
+
 	public String buildTotalUrl ()
 	{
-		return getBaseUrl()+documentRequest()+"l=2000&"+docApiKeyUrl();
+		return getBaseUrl()+documentRequest()+"l=2000&"
+				+"q={'date.year':'2016'}&"
+				+"f={\"aPlayerRecord\":0,\"hPlayerRecord\":0,\"aTeamRecord\":0,\"hTeamRecord\":0}&"
+				+docApiKeyUrl();
 	}
 	public String buildScoreUrl ()
 	{
