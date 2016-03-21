@@ -34,6 +34,7 @@ import hungry.redball.aStatic.StaticMethod;
 import hungry.redball.aStatic.StaticPref;
 import hungry.redball.alram.PrefActivity;
 import hungry.redball.alram.RepeatReceiver;
+import hungry.redball.team.url.Url_team_thread;
 import hungry.redball.util.QueryBuilder_loading;
 
 public class LoadingActivity extends AppCompatActivity {
@@ -49,7 +50,7 @@ public class LoadingActivity extends AppCompatActivity {
     //프로그래스바
     private TextView tv;
     public static MyHandler mHandler;
-    private final int PROGRESS_NUM=3;
+    private final int PROGRESS_NUM=4;
     private final int PROGRESS_INT=(100/PROGRESS_NUM) + 1;
     private int value = 0;
     private ProgressBar progBar;
@@ -99,6 +100,9 @@ public class LoadingActivity extends AppCompatActivity {
         if(!enterFromNotify) {
             tv.append("최초 접속시 선수정보를 다운(최대 1분 소요)\n");
             new Thread_player(this).execute();
+            //팀 다운
+            for(int i=0;i<1;i++)
+                new Url_team_thread().execute(i);
         }
 
     }
@@ -162,6 +166,9 @@ public class LoadingActivity extends AppCompatActivity {
                 break;
             case 3:
                 tv.append(msg.what+"player  complete"+myHandlerCount*PROGRESS_INT+"%\n");
+                break;
+            case 4:
+                tv.append(msg.what+"team  complete"+myHandlerCount*PROGRESS_INT+"%\n");
                 break;
         }
         //선수 로딩 막음(주석제거)
