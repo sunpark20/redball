@@ -22,6 +22,7 @@ public class Url_team_thread extends AsyncTask<Integer, Void, JSONArray> {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        //만약 에러가 나면 이걸 리턴하것네요.
         return new JSONArray();
     }
 

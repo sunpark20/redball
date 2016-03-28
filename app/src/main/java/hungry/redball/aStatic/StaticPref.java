@@ -20,7 +20,22 @@ import hungry.redball.alram.model.PrefInfo;
  * Created by soy on 2016-01-07.
  */
 public class StaticPref {
-    public static final String PLAYER_DATE="PLATER_DATE";
+
+    //START  ArrayList<String> sharedpreference
+    public static void savePref_long(Context c, long millis) {
+        final String name = "PREF_LONG";
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(c.getApplicationContext());
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putLong(name, millis);
+        editor.commit();
+    }
+    public static Long loadPref_long(Context c){
+        final String name = "PREF_LONG";
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(c.getApplicationContext());
+        Long millis=sharedPreferences.getLong(name, 0);
+        return millis;
+    }
+    //START  ArrayList<String> sharedpreference
 
     //START string sharedpreference
     public static void savePref_String(Context c,String TAG, String str, String name) {

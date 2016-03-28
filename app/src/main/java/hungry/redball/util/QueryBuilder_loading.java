@@ -43,8 +43,8 @@ public class QueryBuilder_loading {
 	public String buildTotalUrl ()
 	{
 		return getBaseUrl()+documentRequest()+"l=2000&"
-				+"q={'date.year':'2016'}&"
-				+"f={\"aPlayerRecord\":0,\"hPlayerRecord\":0,\"aTeamRecord\":0,\"hTeamRecord\":0}&"
+				//+"q={'date.year':'2016'}&"
+				+"f={\"aPlayerRecord\":0,\"hPlayerRecord\":0,\"aTeamRecord\":0,\"hTeamRecord\":0,\"_id\":0}&"
 				+docApiKeyUrl();
 	}
 	public String buildScoreUrl ()

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="sblue">#001bce</color>
     <color name="darkblue">#a00c178e</color>
     <color name="pressedblue">#c5d7ec</color>
     <color name="wweak">#a0d7d7dc</color>

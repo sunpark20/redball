@@ -1,7 +1,9 @@
 package hungry.redball.player;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
@@ -20,11 +22,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
-import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
@@ -81,34 +78,11 @@ public class Frag_player extends Fragment{
         copiedRows.addAll(rows);
 
 	}
-    //test
-    ImageLoaderConfiguration config;
-    ImageLoader imageLoader;
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);
 		view = inflater.inflate(R.layout.fragment_player, container, false);
-
-        //test
-        //Get the imageloader.
-        ImageLoader imageLoader = ImageLoader.getInstance();
-
-        //Create image options.
-        DisplayImageOptions options = new DisplayImageOptions.Builder()
-                .cacheOnDisc()
-                .imageScaleType(ImageScaleType.IN_SAMPLE_POWER_OF_2)
-                .bitmapConfig(Bitmap.Config.RGB_565)
-                .build();
-
-        //Create a config with those options.
-        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(getActivity())
-                .defaultDisplayImageOptions(options)
-                .build();
-
-        //Initialise the imageloader.
-        imageLoader.init(config);
-
-
 
 		// if this is set true,
 		// Activity.onCreateOptionsMenu will call Fragment.onCreateOptionsMenu
@@ -135,8 +109,8 @@ public class Frag_player extends Fragment{
         JSONObject childJSONObject=null;
 
 		try{
-			for (int i=0; i< StaticMethod.jArr[position].length(); i++){
-				childJSONObject = StaticMethod.jArr[position].getJSONObject(i);
+			for (int i=0; i< StaticMethod.getJ(position).length(); i++){
+				childJSONObject = StaticMethod.getJ(position).getJSONObject(i);
 				Player p=new Player();
 				//row1
 				p.setR(String.valueOf(i + 1));
@@ -339,21 +313,14 @@ public class Frag_player extends Fragment{
             //스피너의 정렬 따라 1,2,3,4 붙도록  (순위 개념)
             holder.r.setText(position + 1 + "");
 
-            //universal 이미지 로딩 쓴거
-            int id=rows.get(position).getFlag();
-            String imageUri = "drawable://" + id; // from drawables (only images, non-9patch)
-
-          /*  //resize (flag)
+            //resize (flag)
             Resources res=context.getResources();
             BitmapFactory.Options options = new BitmapFactory.Options();
             options.inSampleSize = 2;
             int id=rows.get(position).getFlag();
             Bitmap src=BitmapFactory.decodeResource(res, id, options);
             //바꾸는 중
-            holder.flag.setImageBitmap(src);*/
-
-            //universal 이미지 로딩 쓴거
-            ImageLoader.getInstance().displayImage(imageUri, holder.flag);
+            holder.flag.setImageBitmap(src);
 
             holder.name.setText(rows.get(position).getName());
             //row2

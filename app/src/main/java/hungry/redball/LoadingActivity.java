@@ -28,23 +28,26 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.concurrent.CountDownLatch;
 
+import hungry.redball.aStatic.Sfile;
 import hungry.redball.aStatic.StaticMethod;
 import hungry.redball.aStatic.StaticPref;
 import hungry.redball.alram.PrefActivity;
 import hungry.redball.alram.RepeatReceiver;
-import hungry.redball.team.url.Url_team_thread;
 import hungry.redball.util.QueryBuilder_loading;
 
 public class LoadingActivity extends AppCompatActivity {
+
+    //date 합ㅍ칠때 쓰는거요.
+    HashMap<Integer,JSONObject> jMap=new HashMap<Integer,JSONObject>();
 
     private final String TAG="LoadingActivity";
 
     //networkCheck dialog
     private AlertDialog networkCheckDialog;
 
-    public static final String JSON_MATCH="JSON_MATCH";
     private boolean enterFromNotify;
 
     //프로그래스바
@@ -58,7 +61,9 @@ public class LoadingActivity extends AppCompatActivity {
 
     //몽고db와 동기화 제어하는 countDownLatch
     CountDownLatch latch1 = new CountDownLatch(1);
-    JSONArray FixJsonArray=null;
+
+    //player 다운결정하는 변수
+    boolean alreadyLoad=false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,12 +72,13 @@ public class LoadingActivity extends AppCompatActivity {
         tv =(TextView)findViewById(R.id.textView);
         progBar= (ProgressBar)findViewById(R.id.progBar1);
 
-        if(!StaticMethod.isNetworkConnected(getBaseContext()))
+        if(!StaticMethod.isNetworkConnected(getBaseContext())){
             showNetworkDialog();
+            return; //return을 안하니까 밑에 계쏙 도네요.
+        }
 
         mHandler= new MyHandler(this);
         progressWork();
-
         //FixturesUpdate에서 capsulation: total->date->>result3뺴기-> serviceUp
         // (date의 onpost에서 result3과 serviceup실행해줌)
         // 개판소스인데 고치고싶다.
@@ -97,13 +103,52 @@ public class LoadingActivity extends AppCompatActivity {
 
         //노티피에서 왔냐 안왔냐? capsul-2
         //$문제소스 플레이어 다운 하루간격 11로 체크해서 다운받기
-        if(!enterFromNotify) {
+       /* if(!enterFromNotify) {
             tv.append("최초 접속시 선수정보를 다운(최대 1분 소요)\n");
-            new Thread_player(this).execute();
-            //팀 다운
-            for(int i=0;i<1;i++)
+
+           *//* //1.팀다운  (need capsulation 1.team- 2.player)
+            for(int i=0;i<5;i++)
                 new Url_team_thread().execute(i);
-        }
+*//*
+            //2.선수다운
+
+            long tempM=StaticPref.loadPref_long(getApplicationContext());
+
+            //2-1.먼저 선수정보를 로딩하고
+            //2-2.다운받는 아이는 백그라운드에서 돌아간다음 완료되면 리스트뷰를 notify 해준다.
+
+            if(tempM==0) { //처음 시작한다는 뜻(Thread_player 완료에서 millisecond를 저장함)
+                new Thread_player(this).execute();
+            }else{
+                boolean isDown=false;
+                new Thread_player_prefLoad(this).execute();
+                //중요함. handler에 한번만 쏴주는 변수
+                alreadyLoad=true;
+                //savedCal을 11시로 설정해놓고  now랑 비교하는 과정.
+                //( 11시 전후로  오늘과 내일설정하는 부분)
+                Calendar savedCal=new GregorianCalendar();
+                savedCal.setTimeInMillis(tempM);
+                Calendar nowCal=new GregorianCalendar();
+
+                int hour=savedCal.get(Calendar.HOUR_OF_DAY);
+                if(hour==0)
+                    hour=24;
+
+                if(hour>23)
+                    savedCal.add(Calendar.DAY_OF_MONTH, 1);
+
+                savedCal.set(Calendar.HOUR_OF_DAY, 23);
+                savedCal.set(Calendar.MINUTE, 0);
+                savedCal.set(Calendar.SECOND, 0);
+
+                if(savedCal.compareTo(nowCal)==-1)
+                    isDown=true;
+                System.out.println(savedCal.getTime() +" < "+ nowCal.getTime()+
+                        "\n이면 다운로드 합니다.");
+                if(isDown)
+                    new Thread_player(this).execute();
+            }
+        }*/
 
     }
 
@@ -172,9 +217,23 @@ public class LoadingActivity extends AppCompatActivity {
                 break;
         }
         //선수 로딩 막음(주석제거)
-        if(myHandlerCount>=PROGRESS_NUM)
+        if(myHandlerCount>=PROGRESS_NUM-2)
             startActivity();
+
         //선수 로딩 막음(주석)
+    }
+    private HashMap<Integer,JSONObject> jsonToMap(String result){
+        HashMap<Integer,JSONObject> map = new HashMap<Integer,JSONObject>();
+        try {
+            JSONArray ja=new JSONArray(result);
+            for(int i=0;i<ja.length();i++){
+                JSONObject jo=ja.getJSONObject(i);
+                map.put((int)jo.get("code"), jo);
+            }
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+        return map;
     }
 
     private void startActivity(){
@@ -205,20 +264,25 @@ public class LoadingActivity extends AppCompatActivity {
         }
     }
 
-    private void FixturesUpdate() throws Exception{
-        String loadMatchInfo=StaticPref.loadPref_String(this,TAG,JSON_MATCH);
+    private void FixturesUpdate(){
+        //일단은 무조건 선수 다운받습니다.
+       /* String loadMatchInfo= Sfile.readFile(this, Sfile.json_fixturesName);
         //최초 로딩시, 그 다음 접속 구분해서 fixtures틀 만들기
-        if(loadMatchInfo.compareTo("defValue")==0) {
+        if(loadMatchInfo=="") {*/
             Log.e(TAG, "Fixtures Thread1-Total start download from mongoDB(2016년만받음)");
             new Thread_query_total(this).execute();
-        }else{
+        /*}else {
             Log.e(TAG, "Fixtures Thread1-Total start load from sharedPreference");
-            FixJsonArray=new JSONArray(loadMatchInfo);
+            try {
+                FixJsonArray = new JSONArray(loadMatchInfo);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
             LoadingActivity.mHandler.sendMessage(LoadingActivity.mHandler.obtainMessage(1));
             latch1.countDown();
-        }
+        }*/
+        //$문제소스 json끼리 검색할때 엄청오래걸림
         Log.e(TAG, "Fixtures Thread2-Date start (2016년을 전부 업데이트하기 떄문에 최적화필요)");
-        //$문제소스 json끼리 검색할때 엄청오래걸림.
         new Thread_query_date(this).execute();
     }
 
@@ -250,16 +314,13 @@ public class LoadingActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
-            try{
-                FixJsonArray=new JSONArray(result);
-            }catch (Exception e){
-                e.printStackTrace();
-            }
             Log.e(TAG, "Fixtures Thread-Total complete");
             LoadingActivity.mHandler.sendMessage(LoadingActivity.mHandler.obtainMessage(1));
+            jMap=jsonToMap(result);
+
+            System.out.println("map사이즈는?" + jMap.size());
             latch1.countDown();
         }
-
     }//END query_score class
 
     //1. start query_date thread class
@@ -273,13 +334,11 @@ public class LoadingActivity extends AppCompatActivity {
 
         @Override
         protected String doInBackground(String... arg0) {
-
             try{
                 latch1.await();
             }catch (Exception e){
                 e.printStackTrace();
             }
-
             //임시-2016년것 다 받아오기 (최적화 필요)
             QueryBuilder_loading qb = new QueryBuilder_loading();
             String urlString=qb.buildDateUrl();
@@ -296,76 +355,75 @@ public class LoadingActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
+
             try{
                 JSONArray result_ja=new JSONArray(result);
-                for(int i=0;i<result_ja.length();i++){
+                int iLength=result_ja.length();
+
+                StaticMethod.startTime();
+                for(int i=0;i<iLength;i++){
                     JSONObject result_jo=result_ja.getJSONObject(i);
-                    String result_code=result_jo.get("code").toString();
+                    //date 한국시간으로 바꾼 후 넣습니다.
+                    //한국시간 바꾸기
+                    //1.result들을 cal로 바꿈
+                    Calendar cal = StaticMethod.setJsonCal(result_jo);
+                    Calendar localTime = new GregorianCalendar();
+                    localTime.setTimeInMillis(cal.getTimeInMillis());
 
-//                    System.out.println(result_jo.toString());
-                    for(int j=0;j<FixJsonArray.length();j++) {
-                        JSONObject jo=FixJsonArray.getJSONObject(j);
-                        String code=jo.get("code").toString();
-                        if(code.compareTo(result_code)==0){
-                            //이전 날짜랑 오늘 날짜랑 비교하자.
-                            //1.result들을 json으로 바꿈
-                            Calendar cal = StaticMethod.setJsonCal(result_jo);
-                            Calendar localTime = new GregorianCalendar();
-                            localTime.setTimeInMillis(cal.getTimeInMillis());
+                    String h=StaticMethod.iTos(localTime.get(Calendar.HOUR_OF_DAY));
+                    String m=StaticMethod.iTos(localTime.get(Calendar.MINUTE));
+                    if(h.length()==1)
+                        h="0"+h;
+                    if(m.length()==1)
+                        m="0"+m;
+                    String time=h + ":" + m;
 
-                            //time change
-                            String h=StaticMethod.iTos(localTime.get(Calendar.HOUR_OF_DAY));
-                            String m=StaticMethod.iTos(localTime.get(Calendar.MINUTE));
-                            if(h.length()==1)
-                                h="0"+h;
-                            if(m.length()==1)
-                                m="0"+m;
-                            String time=h + ":" + m;
-//                            System.out.println(h + ":" + m +" 이전데이터:"+jo.get("time")+" "+result_jo.get("date"));
-
-                            //date change
-                            //"date": {"year": "2015", "day": "9", "month": "08"}
-                            String year=StaticMethod.iTos(localTime.get(Calendar.YEAR));
+                    //date change
+                    //"date": {"year": "2015", "day": "9", "month": "08"}
+                    String year=StaticMethod.iTos(localTime.get(Calendar.YEAR));
 //                            System.out.println(year);
-                            JSONObject date=jo.getJSONObject("date");
-                            date.put("year", year);
-                            String month=StaticMethod.iTos(localTime.get(Calendar.MONTH)+1);
-                            if(month.length()==1)
-                                month="0"+month;
+                    JSONObject tDate=new JSONObject();
+                    tDate.put("year", year);
+                    String month=StaticMethod.iTos(localTime.get(Calendar.MONTH)+1);
+                    if(month.length()==1)
+                        month="0"+month;
 //                            System.out.println(month);
-                            date.put("month", month);
-                            String day=StaticMethod.iTos(localTime.get(Calendar.DAY_OF_MONTH));
+                    tDate.put("month", month);
+                    String day=StaticMethod.iTos(localTime.get(Calendar.DAY_OF_MONTH));
 //                            System.out.println(day);
-                            date.put("day", day);
+                    tDate.put("day", day);
 //                            System.out.println(jo.toString());
 
-                            //이제 time 이랑 date 다 넣을꺼다.
-                            //time 넣기
-                            if(time.compareTo("")!=0)
-                                FixJsonArray.getJSONObject(j).put("time", time);
-                            else
-                                System.out.println("이건 비어 있으면 안되는디우??"+code+time);
+                    //이제 다 잡아넣습니다.
+                    int result_code=StaticMethod.sToi(result_jo.get("code").toString());
+                    String result_score=result_jo.get("score").toString();
 
-                            //date넣기
-                            if(date.toString().compareTo("")!=0)
-                                FixJsonArray.getJSONObject(j).put("date", date);
-                            else
-                                System.out.println("이건 비어 있으면 안되는디우??"+code+date);
-
-                            //score넣기
-                            FixJsonArray.getJSONObject(j).put("score", result_jo.get("score"));
-                            break;
-                        }
+                    if(jMap.get(result_code)!=null){
+                        jMap.get(result_code).put("score", result_score );
+                        jMap.get(result_code).put("time", time);
+                        jMap.get(result_code).put("date", tDate);
+                    }else{
+                        System.out.println("이게 와 널이냐?");
+                        System.out.println(result_code+ result_jo.toString());
                     }
-                } //end for
+
+                } //end for i
+                StaticMethod.endTime();
 
             }catch (Exception e){
                 e.printStackTrace();
             }
+
             Log.e(TAG, "Fixtures Thread-Date complete");
 
-            StaticPref.savePref_String(context, TAG, FixJsonArray.toString(), JSON_MATCH);
-            serviceUp();
+            JSONArray ja=new JSONArray();
+            for(Integer i: jMap.keySet())
+                ja.put(jMap.get(i));
+
+            Sfile.saveFile(context, Sfile.json_fixturesName, ja.toString());
+            System.out.println("하하호호히히호" + ja.toString());
+            //serviceUp();
+
             LoadingActivity.mHandler.sendMessage(LoadingActivity.mHandler.obtainMessage(2));
         }
     }//END query_date class
@@ -431,15 +489,18 @@ public class LoadingActivity extends AppCompatActivity {
                     String key="p"+j;
                     StaticPref.savePref_String(getApplicationContext(),
                             TAG, resultJa[j].toString(), key);
-                    StaticMethod.jArr[j]=resultJa[j];
+                    StaticMethod.setJ(resultJa[j], j);
                 }
-
 
             }catch (Exception e){
                 e.printStackTrace();
             }
             Log.e(TAG, "Player Thread complete");
-            LoadingActivity.mHandler.sendMessage(LoadingActivity.mHandler.obtainMessage(3));
+            Calendar c=new GregorianCalendar();
+
+            StaticPref.savePref_long(getApplicationContext(), c.getTimeInMillis());
+            if(!alreadyLoad)
+                LoadingActivity.mHandler.sendMessage(LoadingActivity.mHandler.obtainMessage(3));
         }
     }//END query_score class
 
@@ -458,7 +519,7 @@ public class LoadingActivity extends AppCompatActivity {
                     String key="p"+i;
                     String temp=StaticPref.loadPref_String(c, TAG, key);
                     JSONArray ja=new JSONArray(temp.toString());
-                    StaticMethod.jArr[i]=ja;
+                    StaticMethod.setJ(ja, i);
                     Log.e("데이터확인", ja.length() + ja.toString());
                 }
                 LoadingActivity.mHandler.sendMessage(LoadingActivity.mHandler.obtainMessage(3));

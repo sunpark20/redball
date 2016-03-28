@@ -18,8 +18,8 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-import hungry.redball.LoadingActivity;
 import hungry.redball.R;
+import hungry.redball.aStatic.Sfile;
 import hungry.redball.aStatic.StaticMethod;
 import hungry.redball.aStatic.StaticPref;
 import hungry.redball.alram.adapter.GridViewAdapter;
@@ -265,7 +265,7 @@ public class AlarmActivity extends AppCompatActivity {
 
             Calendar c_now=Calendar.getInstance();
             //1모아보기 목록에 추가
-            String loadMatchInfo= StaticPref.loadPref_String(this, TAG, LoadingActivity.JSON_MATCH);
+            String loadMatchInfo= StaticPref.loadPref_String(this, TAG, Sfile.json_fixturesName);
             try{
                 JSONArray ja=new JSONArray(loadMatchInfo);
                 //관심팀 해쉬맵 로드

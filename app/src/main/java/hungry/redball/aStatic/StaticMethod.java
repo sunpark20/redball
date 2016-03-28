@@ -9,6 +9,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
@@ -24,12 +25,28 @@ import java.util.TimeZone;
  */
 public class StaticMethod {
     private static PowerManager.WakeLock sCpuWakeLock;
-    public static JSONArray[] jArr=new JSONArray[5];
-    public static JSONArray[] jArr_team=new JSONArray[5];
-    public static boolean TT_RepeatReceiver;
+    //플레이어 저장하는 변수.
+    private static JSONArray[] jArr=new JSONArray[5];
+    public static synchronized JSONArray getJ(int i){
+        return StaticMethod.jArr[i];
+    }
+    public static synchronized void setJ(JSONArray jArr, int i){
+        StaticMethod.jArr[i]= jArr;
+    }
 
-    //shared preference
-    public static String fristStrat_p;
+    public static JSONArray[] jArr_team=new JSONArray[5];
+
+    //시간측정
+    static private long start,end;
+
+    public static void startTime(){
+        start=System.currentTimeMillis();
+    }
+    public static void endTime(){
+        end = System.currentTimeMillis();
+        System.out.println( "------------------실행 시간 : " + ( end - start )/1000.0 );
+    }
+
 
     public static void fToast(Context context, String string){
         Toast.makeText(context, string, Toast.LENGTH_SHORT).show();
@@ -134,6 +151,17 @@ public class StaticMethod {
         return cal;
     }
 
+    public static JSONArray concatJsonArray(JSONArray... arrs)
+            throws JSONException {
+        JSONArray result = new JSONArray();
+        for (JSONArray arr : arrs) {
+            for (int i = 0; i < arr.length(); i++) {
+                result.put(arr.get(i));
+            }
+        }
+        return result;
+    }
+
     public static JSONArray RemoveJSONArray( JSONArray jarray,int pos) {
 
         JSONArray Njarray=new JSONArray();
@@ -145,5 +173,4 @@ public class StaticMethod {
         }catch (Exception e){e.printStackTrace();}
         return Njarray;
     }
-
 }

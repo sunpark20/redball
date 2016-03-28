@@ -34,7 +34,6 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.GregorianCalendar;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -68,7 +67,6 @@ public class FicturesActivity extends AppCompatActivity {
     private float lastY;
 
     static public String positionKey;
-    static public HashMap<Integer,Boolean> testCodeArr= new HashMap<Integer,Boolean>();
     static public JSONArray resultArray;
     static public boolean isResultArray[] = new boolean[5];
     static public List<JSONObject> jsonSortList;

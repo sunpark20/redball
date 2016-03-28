@@ -22,9 +22,6 @@ public class Url_team {
     public static String[] NAVER_LEAGUE=new String[5];
     int num;
 
-    final int LENGTH=10;
-    JSONArray cell;
-
     public Url_team(int num){
         this.num=num;
         NAVER_LEAGUE[0]="epl";
@@ -35,10 +32,7 @@ public class Url_team {
     }
 
     public JSONArray getUrlContent() throws Exception {
-        int count=0;
-//        String strUrl="http://sports.news.naver.com/record/index.nhn?uCategory=wfootball&category="
-//                +NAVER_LEAGUE[num];
-        String strUrl="http://m.sports.naver.com/wfootball/record/index.nhn?category=epl&year=2015";
+        String strUrl="http://m.sports.naver.com/wfootball/record/index.nhn?category="+NAVER_LEAGUE[num]+"&year=2015";
         URL url = new URL(strUrl);
         HttpURLConnection conn = getConnection(url);
         String headerType = conn.getContentType();
@@ -58,11 +52,20 @@ public class Url_team {
         in.close();
 
         String result=sb.toString();
-        result.
+        int start=result.indexOf("recordList :")+13;
+        int end=result.indexOf(", sort:\"gainPoint\"");
 
+//        System.out.println(result.substring(end-100, end));
+//        System.out.println(result.substring(start, end));
 
-        Log.e("팀이 몇개일까", cell.length() + "");
-        return cell;
+        result=result.substring(start, end);
+        JSONArray ja=new JSONArray(result);
+          //결과 프린팅
+//        for(int i=0;i<ja.length();i++){
+//            JSONObject jo=ja.getJSONObject(i);
+//            System.out.println(jo.toString());
+//        }
+        return ja;
     }
     private HttpURLConnection getConnection(URL entries) throws Exception{
         final int RETRY_DELAY_MS=3000;

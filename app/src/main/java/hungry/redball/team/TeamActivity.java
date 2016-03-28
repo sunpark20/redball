@@ -15,22 +15,23 @@ public class TeamActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_p_and_t);
-        //for the pre 4.0 device.
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            super.onCreate(savedInstanceState);
+            setContentView(R.layout.activity_p_and_t);
 
-        // Initialize the ViewPager and set an adapter
-        ViewPager pager = (ViewPager) findViewById(R.id.pager);
-        MyPagerAdapter adapter = new MyPagerAdapter(getSupportFragmentManager());
-        pager.setAdapter(adapter);
+            //for the pre 4.0 device.
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        // Bind the tabs to the ViewPager
-        PagerSlidingTabStrip tabs = (PagerSlidingTabStrip) findViewById(R.id.tabs);
-        tabs.setViewPager(pager);
-    }
+            // Initialize the ViewPager and set an adapter
+            ViewPager pager = (ViewPager) findViewById(R.id.pager);
+            MyPagerAdapter adapter = new MyPagerAdapter(getSupportFragmentManager());
+            pager.setAdapter(adapter);
 
-    public class MyPagerAdapter extends FragmentPagerAdapter {
+            // Bind the tabs to the ViewPager
+            PagerSlidingTabStrip tabs = (PagerSlidingTabStrip) findViewById(R.id.tabs);
+            tabs.setViewPager(pager);
+        }
+
+        public class MyPagerAdapter extends FragmentPagerAdapter {
 
         private final String[] TITLES = { "프리미어","라리가","분데스","세리에","리그1" };
 
@@ -52,6 +53,5 @@ public class TeamActivity extends AppCompatActivity {
         public Fragment getItem(int position) {
             return Frag_team.newInstance(position);
         }
-
     }
 }
