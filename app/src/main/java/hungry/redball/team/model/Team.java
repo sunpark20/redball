@@ -5,7 +5,15 @@ package hungry.redball.team.model;
  */
 public class Team {
     int flag;
-    String teamName, rank, app, win, draw, lose, goal, minusGoal, compareGG, winScore;
+    String name,teamName, rank, app, win, draw, lose, goal, minusGoal, compareGG, winScore;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public int getFlag() {
         return flag;

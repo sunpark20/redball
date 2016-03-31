@@ -83,6 +83,7 @@ public class Frag_player extends Fragment{
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);
 		view = inflater.inflate(R.layout.fragment_player, container, false);
+
 		// if this is set true,
 		// Activity.onCreateOptionsMenu will call Fragment.onCreateOptionsMenu
 		// Activity.onOptionsItemSelected will call Fragment.onOptionsItemSelected
@@ -108,8 +109,8 @@ public class Frag_player extends Fragment{
         JSONObject childJSONObject=null;
 
 		try{
-			for (int i=0; i< StaticMethod.jArr[position].length(); i++){
-				childJSONObject = StaticMethod.jArr[position].getJSONObject(i);
+			for (int i=0; i< StaticMethod.getJ(position).length(); i++){
+				childJSONObject = StaticMethod.getJ(position).getJSONObject(i);
 				Player p=new Player();
 				//row1
 				p.setR(String.valueOf(i + 1));
@@ -311,13 +312,16 @@ public class Frag_player extends Fragment{
             //row1
             //스피너의 정렬 따라 1,2,3,4 붙도록  (순위 개념)
             holder.r.setText(position + 1 + "");
+
             //resize (flag)
             Resources res=context.getResources();
             BitmapFactory.Options options = new BitmapFactory.Options();
             options.inSampleSize = 2;
             int id=rows.get(position).getFlag();
             Bitmap src=BitmapFactory.decodeResource(res, id, options);
+            //바꾸는 중
             holder.flag.setImageBitmap(src);
+
             holder.name.setText(rows.get(position).getName());
             //row2
             holder.team.setText(rows.get(position).getTeam());
@@ -375,6 +379,8 @@ public class Frag_player extends Fragment{
         }
 
     }
+
+
 
     @Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -457,6 +463,9 @@ public class Frag_player extends Fragment{
 			}
 		});
 	}
+
+
+
 }
 //골랐을 떄 동작하는 것 일단 나둡시당 안쓰지만 ㅇ리단 주석
 //	@Override

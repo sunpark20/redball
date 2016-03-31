@@ -3,17 +3,11 @@ package hungry.redball.team.url;
 import android.util.Log;
 
 import org.json.JSONArray;
-import org.json.JSONObject;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.Iterator;
 
 /**
  * stateID
@@ -28,12 +22,9 @@ public class Url_team {
     public static String[] NAVER_LEAGUE=new String[5];
     int num;
 
-    final int LENGTH=10;
-    JSONArray cell;
-
     public Url_team(int num){
         this.num=num;
-        NAVER_LEAGUE[0]="premier";
+        NAVER_LEAGUE[0]="epl";
         NAVER_LEAGUE[1]="primera";
         NAVER_LEAGUE[2]="bundesliga";
         NAVER_LEAGUE[3]="seria";
@@ -41,18 +32,16 @@ public class Url_team {
     }
 
     public JSONArray getUrlContent() throws Exception {
-        int count=0;
-        String strUrl="Http://sports.news.naver.com/sports/index.nhn?category=worldfootball&ctg=record&tab="
-                +NAVER_LEAGUE[num];
+        String strUrl="http://m.sports.naver.com/wfootball/record/index.nhn?category="+NAVER_LEAGUE[num]+"&year=2015";
         URL url = new URL(strUrl);
         HttpURLConnection conn = getConnection(url);
         String headerType = conn.getContentType();
         BufferedReader in;
-//        if (headerType.toUpperCase().indexOf("UTF-8") != -1){
-//            in = new BufferedReader(new InputStreamReader(conn.getInputStream(),"UTF-8"));
-//        } else {
+        if (headerType.toUpperCase().indexOf("UTF-8") != -1){
+            in = new BufferedReader(new InputStreamReader(conn.getInputStream(),"UTF-8"));
+        } else {
             in = new BufferedReader(new InputStreamReader(conn.getInputStream(),"EUC-KR"));
-        //}
+        }
 
         StringBuffer sb = new StringBuffer();
         String thisLine = null;
@@ -62,43 +51,21 @@ public class Url_team {
         }
         in.close();
 
-        Document doc = Jsoup.parse(sb.toString());
-        Elements rows = doc.select("table.tboxj tbody tr");
-        String[] names = new String[LENGTH];
+        String result=sb.toString();
+        int start=result.indexOf("recordList :")+13;
+        int end=result.indexOf(", sort:\"gainPoint\"");
 
-        cell = new JSONArray();
-        for (Element row : rows) {
-            JSONObject jsonObject = new JSONObject();
+//        System.out.println(result.substring(end-100, end));
+//        System.out.println(result.substring(start, end));
 
-            Iterator<Element> iterElem = row.getElementsByTag("td").iterator();
-            if(count==0){
-                for (String name : names) {
-                    names[count]=iterElem.next().text();
-                    count++;
-                }
-            }else{
-                for (String name : names) {
-                    try{
-                        jsonObject.put(name, iterElem.next().text());
-                    }catch(Exception e){
-                        e.printStackTrace();
-                    }
-                }
-                cell.put(jsonObject);
-            }
-        }
-
-        //print list
-//        for(int i=0;i<cell.length();i++){
-//            try{
-//                System.out.println(cell.get(i).toString());
-//            }catch (Exception e){
-//                e.printStackTrace();
-//            }
+        result=result.substring(start, end);
+        JSONArray ja=new JSONArray(result);
+          //결과 프린팅
+//        for(int i=0;i<ja.length();i++){
+//            JSONObject jo=ja.getJSONObject(i);
+//            System.out.println(jo.toString());
 //        }
-
-        Log.e("팀이 몇개일까", cell.length() + "");
-        return cell;
+        return ja;
     }
     private HttpURLConnection getConnection(URL entries) throws Exception{
         final int RETRY_DELAY_MS=3000;

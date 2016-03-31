@@ -70,8 +70,14 @@ public class Frag_team extends Fragment {
 		position = getArguments().getInt(ARG_POSITION);
 		flag=new FlagHashMap(); //깃발 정보 불러오기
 		flag.makeHashMap();
-		teamName=new String[StaticMethod.jArr_team[position].length()];//온클릭 리스너에서 팀이름 보여주기
-		loadTeam(); //팀정보 불러오기
+
+		// java.lang.NullPointerException이 떠서 일단 넣어놈
+		try{
+			teamName=new String[StaticMethod.jArr_team[position].length()];//온클릭 리스너에서 팀이름 보여주기
+			loadTeam(); //팀정보 불러오기
+		}catch (Exception e){
+			e.printStackTrace();
+		}
 	}
 
 
@@ -96,27 +102,33 @@ public class Frag_team extends Fragment {
 			for(int i=0;i<StaticMethod.jArr_team[position].length();i++){
 				JSONObject childJson=StaticMethod.jArr_team[position].getJSONObject(i);
 				Team team=new Team();
-				String flagName=childJson.get("팀명").toString();
+				String flagName=childJson.get("teamShortName").toString();
+				String tempName=childJson.get("teamName").toString();
 				try { // 깃발정보 다르면 이미지x
-					flagId = flag.list.get(0).get(flagName);
+					flagId = flag.list.get(0).get(tempName);
 				}catch (NullPointerException e){
 					flagId = 0;
 					Log.e("Frag_team", "깃발 정보가 없어요!");
 				}
 				team.setFlag(flagId);
-				team.setRank(childJson.get("순위").toString());
-				team.setApp(childJson.get("경기수").toString());
-				team.setWin(childJson.get("승").toString());
-				team.setDraw(childJson.get("무").toString());
-				team.setLose(childJson.get("패").toString());
-				team.setGoal(childJson.get("득점").toString());
-				team.setMinusGoal(childJson.get("실점").toString());
-				team.setCompareGG(childJson.get("득실차").toString());
-				team.setWinScore(childJson.get("승점").toString());
+				//{"teamCode":"29","myTeamUrl":"\/team\/index.nhn?category=epl&teamCode=29",
+				// "assist":null,"league":100,
+				// "lastResult":"4승 1무 0패"
+				team.setName(childJson.get("teamShortName").toString());
+				team.setRank(childJson.get("rank").toString());
+				team.setApp(childJson.get("gameCount").toString());
+				team.setWin(childJson.get("won").toString());
+				team.setDraw(childJson.get("drawn").toString());
+				team.setLose(childJson.get("lost").toString());
+				team.setGoal(childJson.get("gainGoal").toString());
+				team.setMinusGoal(childJson.get("loseGoal").toString());
+				team.setCompareGG(childJson.get("goalGap").toString());
+				team.setWinScore(childJson.get("gainPoint").toString());
 
 				rows.add(team);
 				//온클릭 리스너에서 팀이름 보여주기
-				teamName[i]=flagName;
+
+				teamName[i]="최근5경기\n"+flagName +" - "+ childJson.get("lastResult").toString();
 			}
 		}catch (Exception e){
 			e.printStackTrace();
@@ -155,6 +167,7 @@ public class Frag_team extends Fragment {
 		public class Holder {
 			LinearLayout row;
 			ImageView flag;
+			TextView name;
 			TextView rank;
 			TextView app;
 			TextView win;
@@ -175,6 +188,7 @@ public class Frag_team extends Fragment {
 				convertView = inflater.inflate(R.layout.fragment_team_row, parent, false);
 				holder.row=(LinearLayout) convertView.findViewById(R.id.row);
 				holder.flag=(ImageView) convertView.findViewById(R.id.flag);
+				holder.name=(TextView) convertView.findViewById(R.id.name);
 				holder.rank=(TextView) convertView.findViewById(R.id.rank);
 				holder.app=(TextView) convertView.findViewById(R.id.app);
 				holder.win=(TextView) convertView.findViewById(R.id.win);
@@ -196,7 +210,7 @@ public class Frag_team extends Fragment {
 			int id=rows.get(position).getFlag();
 			Bitmap src=BitmapFactory.decodeResource(res, id, options);
 			holder.flag.setImageBitmap(src);
-
+			holder.name.setText(rows.get(position).getName());
 			holder.rank.setText(rows.get(position).getRank());
 			holder.app.setText(rows.get(position).getApp());
 			holder.win.setText(rows.get(position).getWin());

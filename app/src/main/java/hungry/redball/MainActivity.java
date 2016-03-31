@@ -5,23 +5,25 @@ import android.app.PendingIntent;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
-import com.mongodb.BasicDBObject;
+import com.google.android.youtube.player.YouTubeIntents;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.HashMap;
 
+import hungry.redball.aStatic.Sfile;
 import hungry.redball.aStatic.StaticMethod;
-import hungry.redball.aStatic.StaticPref;
 import hungry.redball.alram.AlarmActivity;
-import hungry.redball.alram.AlarmReceiver;
+import hungry.redball.alram.PrefActivity;
 import hungry.redball.alram.RepeatReceiver;
 import hungry.redball.fixtures.FicturesActivity;
 import hungry.redball.matchRepo.ReportActivity;
@@ -30,30 +32,66 @@ import hungry.redball.team.TeamActivity;
 import hungry.redball.util.RedballProgressDialog;
 
 public class MainActivity extends AppCompatActivity {
-    private HashMap<String,JSONArray> map = new HashMap<String,JSONArray>();
-    static public BasicDBObject newContacts = new BasicDBObject();
-    int trash;
+   // static public BasicDBObject newContacts = new BasicDBObject();
+
     private final String TAG="MainActivity";
     //networkCheck dialog
     private AlertDialog networkCheckDialog;
     //redball dialog
     private RedballProgressDialog redballDialog;
 
+    private boolean temp;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         long e = System.currentTimeMillis();
-        Log.e("tiem", e - LoadingActivity.s + "");
         setContentView(R.layout.activity_main);
         readJsonFile();
+        serviceUp();
+        if(!temp){
+            temp=true;
+            StaticMethod.endTime();
+        }
 
+
+    }
+    private void youtubeStart(){
+        //유투브 앱넣는 부분
+        final String appPackageName = "com.google.android.youtube"; // getPackageName() from Context or Activity  object
+        String USER_ID = "Saturday, Mar 19 2016 Crystal Palace Leicester";
+
+        String version = YouTubeIntents.getInstalledYouTubeVersionName(this);
+        if (version != null) {
+            Intent intent = YouTubeIntents.createSearchIntent(this, USER_ID);
+            startActivity(intent);
+        } else {
+            try {
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
+            } catch (android.content.ActivityNotFoundException anfe) {
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id=" + appPackageName)));
+            }
+        }
+      /*  2번째 효짜꺼에서 따온것.
+                view15.setOnClickListener(new OnClickListener() {
+            String search= teamList.getTeam(team1)+" vs "+teamList.getTeam(team2)+" "+score1+":"+score2+" "+y;
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_SEARCH);
+                intent.setPackage("com.google.android.youtube");
+                intent.putExtra("query", search);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+            }
+        });*/
     }
 
     private void readJsonFile(){
         Log.e("static", "readJsonFile");
+        HashMap<String, JSONArray> map=new HashMap<String, JSONArray>();
+        JSONObject parsedJo = new JSONObject();
         try {
-            String loadMatchInfo= StaticPref.loadPref_String(this, TAG, LoadingActivity.JSON_MATCH);
-            JSONArray contacts=new JSONArray(loadMatchInfo);
+            JSONArray contacts=new JSONArray(Sfile.readFile(this, Sfile.json_fixturesName));
             JSONObject dateObj;
 
             for(int i=0;i<contacts.length();i++){
@@ -71,43 +109,29 @@ public class MainActivity extends AppCompatActivity {
                     map.put(newKey,newClassifiData);
                 }
             }
-            newContacts.putAll(map);
+            for(String key:map.keySet()){
+                parsedJo.put(key, map.get(key));
+            }
 
+            Sfile.saveFile(this, Sfile.json_parsed_fixturesName, parsedJo.toString());
         } catch(Exception e) {
             e.printStackTrace();
         }
     }
 
-
-    public void AlarmTestOnClicked(View view) {
-        AlarmReceiver a=new AlarmReceiver();
-        a.setAlarm(this, 9999, 1000 * 10, 0, "없음");
-    }
-    public void AlarmcTestOnClicked(View view) {
-        AlarmReceiver a=new AlarmReceiver();
-        a.cancelAlarm(this, 9999);
-    }
-    public void downTestOnClicked(View view) {
-        LoadingActivity l=new LoadingActivity();
-        l.download();
-    }
-    public void ButtonTestOnClicked(View view) {
-
+    private void serviceUp(){
         Intent intent = new Intent(this, RepeatReceiver.class);
-
         boolean alarmUp = (PendingIntent.getBroadcast(this, 0,
                 intent,
                 PendingIntent.FLAG_NO_CREATE) != null);
-
-//        if(alarmUp){
-//            Log.e(TAG, "알람이가 벌써 동작하고있잔아...");
-//        }else{
-            Log.e(TAG, "메인에서 테스트중..");
-            Log.e(TAG, "반복 스케줄 동작합니다.");
+        if(alarmUp){
+            Log.e(TAG, "알람이가 동작중");
+        }else{
+            Log.e(TAG, "알람이 부팅에서 안켜졌네. 여기서 킵니다.");
             RepeatReceiver repeatAlarm = new RepeatReceiver();
             //Context context, int RequestCode //무조건 0 주면 된다.
             repeatAlarm.setAlarm(this, 0);
-//        }
+        }
     }
 
     public void ButtonTeamOnClicked(View view) {
@@ -116,6 +140,10 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, TeamActivity.class);
         startActivity(intent);
     }
+    public void ButtonNewsOnClicked(View view) {
+        Toast.makeText(this,"뉴스기사 준비중입니다.", Toast.LENGTH_SHORT).show();
+    }
+
     public void ButtonPlayerOnClicked(View view) {
         if(!StaticMethod.isNetworkConnected(getBaseContext()))
             showNetworkDialog();
@@ -130,7 +158,7 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
     public void  ButtonPrefOnClicked(View view) {
-        Intent intent = new Intent(this, ReportActivity.class);
+        Intent intent = new Intent(this, PrefActivity.class);
         startActivity(intent);
     }
     public void ButtonAlarmOnClicked(View view) {

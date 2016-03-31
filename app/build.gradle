@@ -38,4 +38,7 @@ dependencies {
     compile 'com.google.code.gson:gson:2.5'
     compile 'joda-time:joda-time:2.9.2'
     compile 'com.android.support:support-v4:23.1.1'
+    compile files('libs/mongo-2.10.1.jar')
+    compile files('libs/YouTubeAndroidPlayerApi.jar')
 }
+
