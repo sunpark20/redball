@@ -34,6 +34,8 @@ public class StaticMethod {
     public static void fToast(Context context, String string){
         Toast.makeText(context, string, Toast.LENGTH_SHORT).show();
     }
+
+
     //네트워크 연결상태 체크 메소드
     public static boolean isNetworkConnected(Context context){
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -80,6 +82,7 @@ public class StaticMethod {
             ex.printStackTrace();
             return null;
         }
+
         return json;
     }
 

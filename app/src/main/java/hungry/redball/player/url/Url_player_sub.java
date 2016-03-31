@@ -30,7 +30,7 @@ public class Url_player_sub {
     public final static String LIGUE1="12501";
 
     public final static String[] Referer={
-        "Https://www.whoscored.com/Regions/252/Tournaments/2/Seasons/5826/Stages/12496/PlayerStatistics/England-Premier-League-2015-2016",
+        "England-Premier-League-2015-2016",
         "Https://www.whoscored.com/Regions/206/Tournaments/4/Seasons/5933/Stages/12647/PlayerStatistics/Spain-La-Liga-2015-2016",
         "Https://www.whoscored.com/Regions/81/Tournaments/3/Seasons/5870/Stages/12559/PlayerStatistics/Germany-Bundesliga-2015-2016",
         "Https://www.whoscored.com/Regions/108/Tournaments/5/Seasons/5970/Stages/12770/PlayerStatistics/Italy-Serie-A-2015-2016",
@@ -38,14 +38,14 @@ public class Url_player_sub {
     };
     static String[] last_model_key=new String[5];
 
-    String subcategory;
+    String code;
     String stageId;
     int num;
     String re;
 
-    public Url_player_sub(int num, String subcategory, String stageId){
+    public Url_player_sub(int num, String code, String stageId){
         this.num=num;
-        this.subcategory=subcategory;
+        this.code=code;
         this.stageId=stageId;
     }
 
@@ -58,8 +58,7 @@ public class Url_player_sub {
 
         String strUrl="https://www.whoscored.com/StatisticsFeed/1/GetPlayerStatistics?category="+
                 category+
-                "&subcategory="+
-                subcategory+"&statsAccumulationType=0&isCurrent=true&playerId=&teamIds=&matchId=&stageId="+
+                "&subcategory="+"&statsAccumulationType=0&isCurrent=true&playerId=&teamIds=&matchId=&stageId="+
                 stageId+"&tournamentOptions=2&sortBy=Rating&sortAscending=&age=&ageComparisonType=&appearances=&appearancesComparisonType=&field=Overall&nationality=&positionOptions=&timeOfTheGameEnd=&timeOfTheGameStart=&isMinApp=true&page=3&includeZeroValues=&numberOfPlayersToPick=" +
                 numberOfPlayersToPick;
         URL url = new URL(strUrl);
@@ -68,7 +67,7 @@ public class Url_player_sub {
             is = new BufferedInputStream(conn.getInputStream());
             data = readIt(is);
             //데이터받은것 확인
-            Log.e("Url_player_subcate", subcategory+"///" + data);
+            Log.e("Url_player_subcate", "///" + data);
         }finally {
             if(is!=null)
                 is.close();

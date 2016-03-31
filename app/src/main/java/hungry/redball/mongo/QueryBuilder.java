@@ -45,7 +45,7 @@ public class QueryBuilder {
 				query="fictures?f="+"{'score':1,'code':1,'_id':0}";
 				break;
 			case matchResultQ:
-				query="fictures?q="+"{'code':"+Integer.valueOf(Qvalue.get("code"))+"}&f="+"{'goalEve':1,,'hTeamRecord':1,'aTeamRecord':1,'hPlayerRecord':1,'aPlayerRecord':1,'_id':0}";
+				query="fictures?q="+"{'code':"+Integer.valueOf(Qvalue.get("code"))+"}&f="+"{'score':1,'goalEve':1,'hTeamRecord':1,'aTeamRecord':1,'hPlayerRecord':1,'aPlayerRecord':1,'_id':0}";
 				break;
 		}
 		return query;

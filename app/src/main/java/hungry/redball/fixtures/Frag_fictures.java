@@ -3,6 +3,7 @@
 package hungry.redball.fixtures;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -44,6 +45,9 @@ import hungry.redball.alram.AlarmReceiver;
 import hungry.redball.alram.RepeatReceiver;
 import hungry.redball.alram.model.PrefInfo;
 import hungry.redball.fixtures.model.Fixtures;
+import hungry.redball.matchRepo.ReportActivity;
+import hungry.redball.mongo.GetContactsAsyncTask;
+import hungry.redball.mongo.QueryBuilder;
 
 
 public class Frag_fictures extends Fragment{
@@ -92,6 +96,23 @@ public class Frag_fictures extends Fragment{
 		}
 		return json;
 
+	}
+
+	public String[] reportLoad(String code) {
+		HashMap<String,String> map = new HashMap();
+		map.put("code", code);
+		GetContactsAsyncTask task = new GetContactsAsyncTask(getActivity(), QueryBuilder.QueryKinde.matchResultQ,map);
+		String matchResult;
+		String[] resultArr=null;
+		try {
+			matchResult = task.execute().get();
+			JSONArray contacts=new JSONArray(matchResult);
+			JSONObject jObj=(JSONObject)contacts.get(0);
+			resultArr =new String[]{jObj.getString("goalEve"),jObj.getString("hTeamRecord"),jObj.getString("aTeamRecord"),jObj.getString("hPlayerRecord"),jObj.getString("aPlayerRecord")};
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return resultArr;
 	}
 
 	@Override
@@ -399,6 +420,9 @@ public class Frag_fictures extends Fragment{
 				}
 
 				final int code = FicturesActivity.jsonSortListArr[position].get(index).getInt("code");
+				final String tempHome=jObj.get("home").toString();
+				final String tempAway=jObj.get("away").toString();
+				final String tempScore=jObj.get("score").toString();
 				if(!isResult){
 					holder.time.setText(jObj.getString("time"));
 					holder.rowLayout.setEnabled(false);
@@ -419,8 +443,7 @@ public class Frag_fictures extends Fragment{
 					}
 
 					final Holder finalHolder = holder;
-					final String tempHome=jObj.get("home").toString();
-					final String tempAway=jObj.get("away").toString();
+
 
 					holder.markFlag.setOnClickListener(new View.OnClickListener() {
 						boolean tempP=isPressed;
@@ -472,6 +495,12 @@ public class Frag_fictures extends Fragment{
 					holder.rowLayout.setOnClickListener(new View.OnClickListener() {
 						@Override
 						public void onClick(View v) {
+							Intent intent = new Intent(getActivity(), ReportActivity.class);
+							intent.putExtra("report",reportLoad(String.valueOf(code)));
+							intent.putExtra("score",tempScore);
+							intent.putExtra("hTeam",tempHome);
+							intent.putExtra("aTeam",tempAway);
+							startActivity(intent);
 							Toast.makeText(getActivity(), code+"", Toast.LENGTH_SHORT).show();
 						}
 					});

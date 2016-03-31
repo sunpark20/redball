@@ -7,7 +7,7 @@ android {
     defaultConfig {
         //multiDexEnabled true  // 라이브러리 중복 허용 소스
         applicationId "com.redball"
-        minSdkVersion  16//원래는 16입니다.
+        minSdkVersion 16//원래는 16입니다.
         targetSdkVersion 23
         versionName "1.02"
     }
@@ -29,12 +29,13 @@ android {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile files('libs/mongo-2.10.1.jar')
     compile 'com.code-troopers.betterpickers:library:2.2.2'
-    compile 'com.android.support:appcompat-v7:23.0.0'
+    compile 'com.android.support:appcompat-v7:23.1.1'
     compile 'com.astuetz:pagerslidingtabstrip:1.0.1'
     compile 'org.apache.commons:commons-lang3:3.0'
     compile 'org.jsoup:jsoup:1.8.3'
     compile 'com.google.code.gson:gson:2.5'
     compile 'joda-time:joda-time:2.9.2'
-    compile files('libs/mongo-2.10.1.jar')
+    compile 'com.android.support:support-v4:23.1.1'
 }

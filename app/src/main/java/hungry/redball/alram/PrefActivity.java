@@ -16,14 +16,18 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 import hungry.redball.R;
 import hungry.redball.aStatic.StaticPref;
 import hungry.redball.alram.model.Pref;
 import hungry.redball.alram.model.PrefInfo;
+import hungry.redball.mongo.GetContactsAsyncTask;
+import hungry.redball.mongo.QueryBuilder;
 import hungry.redball.team.util.FlagHashMap;
 
 /**
@@ -41,6 +45,25 @@ public class PrefActivity extends AppCompatActivity {
         setContentView(R.layout.activity_pref);
         prefInfo= StaticPref.loadPref_prefInfo(this);
         setStuff();
+
+        HashMap<String,String> map = new HashMap();
+        map.put("code", "959903");
+        GetContactsAsyncTask task = new GetContactsAsyncTask(this, QueryBuilder.QueryKinde.matchResultQ,map);
+        String matchResult;
+        try {
+            matchResult = task.execute().get();
+            JSONArray contacts=new JSONArray(matchResult);
+            JSONObject jObj=(JSONObject)contacts.get(0);
+//            Log.e("hTeamRecord",matchResult);
+//            Log.e("score",jObj.getString("score"));
+            Log.e("goalEve",jObj.getString("goalEve"));
+            Log.e("aTeamRecord",jObj.getString("aTeamRecord"));
+            Log.e("hTeamRecord",jObj.getString("hTeamRecord"));
+            Log.e("hPlayerRecord",jObj.getString("hPlayerRecord"));
+            Log.e("aPlayerRecord",jObj.getString("aPlayerRecord"));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void setStuff(){

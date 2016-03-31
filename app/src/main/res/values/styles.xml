@@ -4,7 +4,6 @@
         <!--Action bar style-->
         <item name="android:actionBarStyle">@style/AppTheme.ActionBar</item>
         <item name="actionBarStyle">@style/AppTheme.ActionBar</item>
-
     </style>
 
     <style name="AppTheme.ActionBar" parent="Widget.AppCompat.Light.ActionBar">
@@ -48,7 +47,5 @@
         <item name="android:minHeight">30dp</item>
     </style>
 
-</resources>
-    <!--<style name="MyCustomDropDownItemStyle" parent="Widget.AppCompat.Spinner.DropDown.ActionBar">-->
-    <!--<item name="android:background">@color/white</item>-->
-    <!--</style>-->
+
+</resources><!--<style name="MyCustomDropDownItemStyle" parent="Widget.AppCompat.Spinner.DropDown.ActionBar">--><!--<item name="android:background">@color/white</item>--><!--</style>-->

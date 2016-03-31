@@ -1,6 +1,5 @@
 package hungry.redball;
 
-
 import android.app.AlertDialog;
 import android.app.PendingIntent;
 import android.content.DialogInterface;
@@ -23,9 +22,9 @@ import hungry.redball.aStatic.StaticMethod;
 import hungry.redball.aStatic.StaticPref;
 import hungry.redball.alram.AlarmActivity;
 import hungry.redball.alram.AlarmReceiver;
-import hungry.redball.alram.PrefActivity;
 import hungry.redball.alram.RepeatReceiver;
 import hungry.redball.fixtures.FicturesActivity;
+import hungry.redball.matchRepo.ReportActivity;
 import hungry.redball.player.PlayerActivity;
 import hungry.redball.team.TeamActivity;
 import hungry.redball.util.RedballProgressDialog;
@@ -33,8 +32,8 @@ import hungry.redball.util.RedballProgressDialog;
 public class MainActivity extends AppCompatActivity {
     private HashMap<String,JSONArray> map = new HashMap<String,JSONArray>();
     static public BasicDBObject newContacts = new BasicDBObject();
-
-    private final String TAG2="MainActivity";
+    int trash;
+    private final String TAG="MainActivity";
     //networkCheck dialog
     private AlertDialog networkCheckDialog;
     //redball dialog
@@ -43,6 +42,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        long e = System.currentTimeMillis();
+        Log.e("tiem", e - LoadingActivity.s + "");
         setContentView(R.layout.activity_main);
         readJsonFile();
 
@@ -51,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
     private void readJsonFile(){
         Log.e("static", "readJsonFile");
         try {
-            String loadMatchInfo= StaticPref.loadPref_String(this, TAG2, LoadingActivity.JSON_MATCH);
+            String loadMatchInfo= StaticPref.loadPref_String(this, TAG, LoadingActivity.JSON_MATCH);
             JSONArray contacts=new JSONArray(loadMatchInfo);
             JSONObject dateObj;
 
@@ -101,8 +102,8 @@ public class MainActivity extends AppCompatActivity {
 //        if(alarmUp){
 //            Log.e(TAG, "알람이가 벌써 동작하고있잔아...");
 //        }else{
-            Log.e(TAG2, "메인에서 테스트중..");
-            Log.e(TAG2, "반복 스케줄 동작합니다.");
+            Log.e(TAG, "메인에서 테스트중..");
+            Log.e(TAG, "반복 스케줄 동작합니다.");
             RepeatReceiver repeatAlarm = new RepeatReceiver();
             //Context context, int RequestCode //무조건 0 주면 된다.
             repeatAlarm.setAlarm(this, 0);
@@ -129,7 +130,7 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
     public void  ButtonPrefOnClicked(View view) {
-        Intent intent = new Intent(this, PrefActivity.class);
+        Intent intent = new Intent(this, ReportActivity.class);
         startActivity(intent);
     }
     public void ButtonAlarmOnClicked(View view) {

@@ -62,12 +62,13 @@ public class LoadingActivity extends AppCompatActivity {
     //프로그래스바
     private int value = 0;
     private ProgressBar progBar;
+    public static long s;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        s = System.currentTimeMillis();
         setContentView(R.layout.activity_loading);
-
         tv =(TextView)findViewById(R.id.textView);
         progBar= (ProgressBar)findViewById(R.id.progBar1);
 
@@ -168,7 +169,7 @@ public class LoadingActivity extends AppCompatActivity {
      /*   if(count>=PROGRESS_NUM)
             startActivity();*/
         //선수 로딩 막음(주석)
-        if(count>=3)
+        if(count>=2)
             startActivity();
 
     }
@@ -244,22 +245,22 @@ public class LoadingActivity extends AppCompatActivity {
 
         ArrayList<Integer> codeArray=new ArrayList<Integer>();
 
-        for(int i=0;i<ja.length();i++){
-            JSONObject jo=ja.getJSONObject(i);
-            String score=jo.get("score").toString();
-
-            Calendar jCal=StaticMethod.setJsonCal(jo);
-
-            if(score.compareTo("vs")==0 //조건1. score값이 비어 있을 때
-                    && jCal.compareTo(nCal)==-1){ //조건2. 현재시간과 json시간을 비교
-                int code=(int)jo.get("code");
-                codeArray.add(code);
-                count++;
-            }
-        }
+//        for(int i=0;i<ja.length();i++){
+//            JSONObject jo=ja.getJSONObject(i);
+//            String score=jo.get("score").toString();
+//
+//            Calendar jCal=StaticMethod.setJsonCal(jo);
+//
+//            if(score.compareTo("vs")==0 //조건1. score값이 비어 있을 때
+//                    && jCal.compareTo(nCal)==-1){ //조건2. 현재시간과 json시간을 비교
+//                int code=(int)jo.get("code");
+//                codeArray.add(code);
+//                count++;
+//            }
+//        }
         //먼저 date를 채워줌. 순서중요. 이거하고 나서 score해야 한번에 최신으로 됨.
-        Log.e(TAG,"2016 date를 전부 업데이트 합니다(최적화필요)");
-        new Thread_query_date(this, ja).execute();
+//        Log.e(TAG,"2016 date를 전부 업데이트 합니다(최적화필요)");
+//        new Thread_query_date(this, ja).execute();
 
         Log.e(TAG,"스코어가 "+ count + "만큼 비어있습니다.");
         if(count>0) {
@@ -366,9 +367,11 @@ public class LoadingActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
+            Log.e("sadsaddad","sadasdsadad");
 //            System.out.println("내가 보고 싶은 결과");
             try{
                 JSONArray result_ja=new JSONArray(result);
+                long s = System.currentTimeMillis();
                 for(int i=0;i<result_ja.length();i++){
                     JSONObject result_jo=result_ja.getJSONObject(i);
                     String result_code=result_jo.get("code").toString();
@@ -425,6 +428,7 @@ public class LoadingActivity extends AppCompatActivity {
                         }
                     }
                 }
+
             }catch (Exception e){
                 e.printStackTrace();
             }
@@ -493,11 +497,11 @@ public class LoadingActivity extends AppCompatActivity {
 
     private void downPlayer(){
         try{
-            new Thread_league(this, 0).execute(Url_player_sub.PRE);
-            new Thread_league(this, 1).execute(Url_player_sub.LALIGA);
-            new Thread_league(this, 2).execute(Url_player_sub.BUNDES);
-            new Thread_league(this, 3).execute(Url_player_sub.SERIE);
-            new Thread_league(this, 4).execute(Url_player_sub.LIGUE1);
+            new Thread_league(this, 0).execute(Url_player_sub.PRE,"England-Premier-League-2015-2016-Liverpool-Manchester-City");
+//            new Thread_league(this, 1).execute(Url_player_sub.LALIGA);
+//            new Thread_league(this, 2).execute(Url_player_sub.BUNDES);
+//            new Thread_league(this, 3).execute(Url_player_sub.SERIE);
+//            new Thread_league(this, 4).execute(Url_player_sub.LIGUE1);
 
         }catch (Exception e){
             e.printStackTrace();
