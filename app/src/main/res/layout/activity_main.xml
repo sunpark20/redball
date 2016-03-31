@@ -1,92 +1,68 @@
 
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent" >
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:orientation="vertical"
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/wweak"
+    tools:context=".MainActivity">
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".MainActivity">
-        <TextView
-            android:text="기록보기"
-            android:textColor="@color/blue"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-        <Button
-            android:onClick="ButtonTeamOnClicked"
-            android:text="팀"
-            android:layout_width="match_parent"
-            style="@style/main_Text" />
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal">
         <Button
             android:onClick="ButtonPlayerOnClicked"
             android:text="선수"
-            android:layout_width="match_parent"
+            android:background="@drawable/m_1_ib"
             style="@style/main_Text" />
-        <TextView
-            android:text="일정"
-            android:textColor="@color/blue"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+        <Button
+            android:onClick="ButtonTeamOnClicked"
+            android:text="팀"
+            android:background="@drawable/m_2_ib"
+            style="@style/main_Text" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal">
         <Button
             android:onClick="ficturePlayerOnClicked"
-            android:text="경기일정"
-            android:layout_width="match_parent"
+            android:text="일정"
+            android:background="@drawable/m_3_ib"
             style="@style/main_Text" />
-        <TextView
-            android:text="알림"
-            android:textColor="@color/blue"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-            <Button
-                android:onClick="ButtonPrefOnClicked"
-                android:text="관심팀"
-                android:layout_width="0dp" android:layout_weight="1"
-                style="@style/main_Text" />
-            <Button
-                android:onClick="ButtonAlarmOnClicked"
-                android:text="관심팀 설정"
-                android:layout_width="0dp" android:layout_weight="1"
-                style="@style/main_Text" />
-        </LinearLayout>
-
-        <!--공갈레이아웃-->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="30dp"
-            android:divider="@color/black"
-            android:dividerPadding="10dp">
-        </LinearLayout>
-
         <Button
-            android:onClick="ButtonTestOnClicked"
-            android:text="알람 테스터"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-        <Button
-            android:onClick="AlarmTestOnClicked"
-            android:text="알람 셋"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-        <Button
-            android:onClick="AlarmcTestOnClicked"
-            android:text="알람 캔슬"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-        <!--공갈레이아웃-->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="30dp"
-            android:divider="@color/black"
-            android:dividerPadding="10dp">
-        </LinearLayout>
-
+            android:onClick="ButtonNewsOnClicked"
+            android:text="준비중.."
+            style="@style/main_Text" />
     </LinearLayout>
-</ScrollView>
+
+    <LinearLayout
+        android:onClick="ButtonAlarmOnClicked"
+        android:layout_height="0dp"
+        android:layout_weight="0.3"
+        android:layout_width="match_parent"
+        android:background="@color/weak">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="+ 팀 알림 설정"
+            android:textSize="22dp"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:background="@drawable/m_alarm"/>
+    </LinearLayout>
+    <Button
+        android:onClick="ButtonPrefOnClicked"
+        android:text="관심팀 (광고창 자리)"
+        android:layout_height="0dp"
+        android:layout_weight="0.5"
+        android:layout_width="match_parent"
+        style="@style/main_Text" />
+
+</LinearLayout>

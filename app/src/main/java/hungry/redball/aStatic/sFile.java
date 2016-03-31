@@ -12,7 +12,7 @@ import java.io.IOException;
 public class Sfile {
     //fixtures 파일이름 저장하는 변수
     public static final String json_fixturesName="json_fixtures";
-
+    public static final String json_parsed_fixturesName="json_parsed";
     static public void saveFile(Context c, String fileName, String string){
         FileOutputStream fos=null;
         try{

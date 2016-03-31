@@ -37,8 +37,8 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Map;
 
-import hungry.redball.MainActivity;
 import hungry.redball.R;
+import hungry.redball.aStatic.Sfile;
 import hungry.redball.aStatic.StaticPref;
 import hungry.redball.alram.model.PrefInfo;
 import hungry.redball.team.util.FlagHashMap;
@@ -74,12 +74,20 @@ public class FicturesActivity extends AppCompatActivity {
     static public int scrollState;
     static public boolean isJong=false;
 
+    private JSONObject newContacts=null;
+
     public FlagHashMap flag;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fixtures);
+        try{
+            newContacts=new JSONObject(Sfile.readFile(this, Sfile.json_parsed_fixturesName));
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
         //for the pre 4.0 device.
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         rightBtn = (ImageButton)findViewById(R.id.right_direction);
@@ -334,8 +342,8 @@ public class FicturesActivity extends AppCompatActivity {
             JSONObject leagueNum = new JSONObject("{'0':'premier','1':'laliga','2':'bundesliga','3':'serie','4':'ligue1'}");
             positionKey=leagueNum.get(String.valueOf(position))+"_"+date;
             hiddenText.setVisibility(View.GONE);
-            if(MainActivity.newContacts.get(positionKey)!=null){
-                array = (JSONArray)MainActivity.newContacts.get(positionKey);
+            if(newContacts.get(positionKey)!=null){
+                array = (JSONArray)newContacts.get(positionKey);
                 JSONObject userObj;
                 resultArray = new JSONArray();
                 int hFlagId,aFlagId;

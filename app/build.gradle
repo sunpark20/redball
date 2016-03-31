@@ -38,4 +38,5 @@ dependencies {
     compile 'joda-time:joda-time:2.9.2'
     compile files('libs/mongo-2.10.1.jar')
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
+    compile files('libs/YouTubeAndroidPlayerApi.jar')
 }
