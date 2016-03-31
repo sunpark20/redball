@@ -7,10 +7,8 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,28 +21,22 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.codetroopers.betterpickers.calendardatepicker.CalendarDatePickerDialogFragment;
-import com.mongodb.BasicDBList;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Map;
 
 import hungry.redball.R;
+import hungry.redball.aStatic.StaticMethod;
 import hungry.redball.aStatic.StaticPref;
 import hungry.redball.alram.AlarmReceiver;
 import hungry.redball.alram.RepeatReceiver;
 import hungry.redball.alram.model.PrefInfo;
-import hungry.redball.fixtures.model.Fixtures;
 import hungry.redball.matchRepo.ReportActivity;
 import hungry.redball.mongo.GetContactsAsyncTask;
 import hungry.redball.mongo.QueryBuilder;
@@ -53,25 +45,18 @@ import hungry.redball.mongo.QueryBuilder;
 public class Frag_fictures extends Fragment{
 
 	private static final String ARG_POSITION = "position";
-	private int position,tmpPosition;
-	private Typeface typeface;
-	private BasicDBList contacts;
-	private HashMap<String,JSONArray> map = new HashMap<String,JSONArray>();
-	private HashMap<String,String> queryValue = new HashMap<String,String>();
+	private int position;
 	private View view;
 	private ListView listView;
-	private ArrayList<Fixtures> rows=new ArrayList<Fixtures>();
 	static public final CustomAdapter ca[]=new CustomAdapter[5];
 	static public final boolean isLimit[]=new boolean[5];
 	static public final int scrollIndex[]=new int[5];
-	ArrayList<JSONObject> alistJsonObj = new ArrayList<JSONObject>();
 	Bitmap onMSrc,unMSrc;
 	//uk
 	Map<Integer, PrefInfo> prefInfo;
 
-	private CalendarDatePickerDialogFragment calendarDatePickerDialogFragment;
-	private FragmentActivity myContext;
-	private static final String FRAG_TAG_DATE_PICKER = "date picker";
+	//팀한글로 바꾸기
+	JSONObject eTokJson;
 
 	public static Frag_fictures newInstance(int position) {
 		Frag_fictures f = new Frag_fictures();
@@ -79,23 +64,6 @@ public class Frag_fictures extends Fragment{
 		b.putInt(ARG_POSITION, position);
 		f.setArguments(b);
 		return f;
-	}
-
-	public String loadJSONFromAsset(String fileName, Context c) {
-		String json = null;
-		try {
-			InputStream is = c.getAssets().open(fileName);
-			int size = is.available();
-			byte[] buffer = new byte[size];
-			is.read(buffer);
-			is.close();
-			json = new String(buffer, "UTF-8");
-		} catch (IOException ex) {
-			ex.printStackTrace();
-			return null;
-		}
-		return json;
-
 	}
 
 	public String[] reportLoad(String code) {
@@ -119,8 +87,18 @@ public class Frag_fictures extends Fragment{
 	public void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
 		Resources res=getActivity().getResources();
+
+		//팀한글로 바꾸기
+		String eTok= StaticMethod.loadJSONFromAsset("teamEtoK.json", getActivity());
+		try{
+			eTokJson=new JSONObject(eTok);
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+
+
 		BitmapFactory.Options options = new BitmapFactory.Options();
-		options.inSampleSize = 1;
+		options.inSampleSize = 2;
 		onMSrc=BitmapFactory.decodeResource(res, R.drawable.f_jong, options);
 		unMSrc=BitmapFactory.decodeResource(res, R.drawable.f_unjong, options);
 		if (FicturesActivity.isOnce) {
@@ -303,6 +281,7 @@ public class Frag_fictures extends Fragment{
 
 		public class Holder {
 			LinearLayout rowLayout;
+			LinearLayout dateTemp;
 			ImageView hFlag;
 			ImageView aFlag;
 			ImageButton markFlag;
@@ -324,6 +303,7 @@ public class Frag_fictures extends Fragment{
 				holder=new Holder();
 				convertView = inflater.inflate(R.layout.fragment_fixtures_row, parent, false);
 				holder.rowLayout=(LinearLayout) convertView.findViewById(R.id.rowlayout);
+				holder.dateTemp=(LinearLayout) convertView.findViewById(R.id.dateTemp);
 				holder.hFlag=(ImageView) convertView.findViewById(R.id.hflag);
 				holder.aFlag=(ImageView) convertView.findViewById(R.id.aflag);
 				holder.markFlag=(ImageButton) convertView.findViewById(R.id.markFlag);
@@ -389,20 +369,24 @@ public class Frag_fictures extends Fragment{
 				if(index!=0&&jObj.getString("date").equals(beforeJObj.getString("date"))) {
 					holder.space.setVisibility(View.GONE);
 					holder.date.setVisibility(View.GONE);
+					holder.dateTemp.setBackgroundColor(getResources().getColor(R.color.transparent));
 				}else{
 					holder.space.setVisibility(View.VISIBLE);
-					holder.space.setBackgroundColor(0xA0F5DCD8);
+					holder.space.setBackgroundColor(getResources().getColor(R.color.dateTemp));
+					holder.dateTemp.setBackgroundColor(getResources().getColor(R.color.dateTemp));
 					holder.date.setVisibility(View.VISIBLE);
-					holder.date.setBackgroundColor(0xA0F5DCD8);
+					holder.date.setBackgroundColor(getResources().getColor(R.color.dateTemp));
 					holder.date.setText(dateObj.getInt("month") + "/" + dateObj.getInt("day") + "(" + week + ")");
 				}
 				if(index==0){
 					holder.space.setVisibility(View.GONE);
 					holder.date.setVisibility(View.GONE);
+					holder.dateTemp.setBackgroundColor(getResources().getColor(R.color.transparent));
 				}
 				holder.dateState.setText(fDateObj.getInt("month") + "/" + fDateObj.getInt("day") + "(" + fWeek + ")");
-				holder.home.setText(jObj.get("home").toString());
-				holder.away.setText(jObj.get("away").toString());
+				//팀한글로 바꾸기
+				holder.home.setText(eTokJson.get(jObj.get("home").toString()).toString());
+				holder.away.setText(eTokJson.get(jObj.get("away").toString()).toString());
 				String score = jObj.get("score").toString();
 				if(score.indexOf(":")!=-1){
 					holder.hscore.setText(score.substring(0,score.indexOf(":")).trim());

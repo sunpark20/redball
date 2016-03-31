@@ -319,7 +319,6 @@ public class Frag_player extends Fragment{
             options.inSampleSize = 2;
             int id=rows.get(position).getFlag();
             Bitmap src=BitmapFactory.decodeResource(res, id, options);
-            //바꾸는 중
             holder.flag.setImageBitmap(src);
 
             holder.name.setText(rows.get(position).getName());

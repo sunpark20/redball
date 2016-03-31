@@ -5,7 +5,6 @@
         <!--Action bar style-->
         <item name="android:actionBarStyle">@style/AppTheme.ActionBar</item>
         <item name="actionBarStyle">@style/AppTheme.ActionBar</item>
-
     </style>
 
     <style name="AppTheme.ActionBar" parent="Widget.AppCompat.Light.ActionBar">
@@ -35,6 +34,15 @@
         <item name="android:layout_height">match_parent</item>
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_weight">1</item>
+    </style>
+
+    <style name="fixtures_Text" parent="android:Widget.TextView">
+        <item name="android:textSize">17dp</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_height">50dp</item>
     </style>
 
     <style name="row2_Text" parent="android:Widget.TextView">

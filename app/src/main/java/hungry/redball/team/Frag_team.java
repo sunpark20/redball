@@ -68,9 +68,7 @@ public class Frag_team extends Fragment {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		position = getArguments().getInt(ARG_POSITION);
-		flag=new FlagHashMap(); //깃발 정보 불러오기
-		flag.makeHashMap();
-
+		flag=FlagHashMap.getInstance();
 		// java.lang.NullPointerException이 떠서 일단 넣어놈
 		try{
 			teamName=new String[StaticMethod.jArr_team[position].length()];//온클릭 리스너에서 팀이름 보여주기
@@ -128,7 +126,7 @@ public class Frag_team extends Fragment {
 				rows.add(team);
 				//온클릭 리스너에서 팀이름 보여주기
 
-				teamName[i]="최근5경기\n"+flagName +" - "+ childJson.get("lastResult").toString();
+				teamName[i]="최근5경기\n"+flagName +"   "+ childJson.get("lastResult").toString();
 			}
 		}catch (Exception e){
 			e.printStackTrace();

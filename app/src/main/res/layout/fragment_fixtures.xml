@@ -11,7 +11,7 @@ android:orientation="vertical">
         android:background="@color/datestate"/>
     <ListView
         android:id="@+id/listView"
-        android:dividerHeight="1dp"
+        android:dividerHeight="1px"
         android:divider="#a0b7b7bc"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

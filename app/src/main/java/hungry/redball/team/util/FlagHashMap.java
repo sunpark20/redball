@@ -13,6 +13,15 @@ import hungry.redball.R;
  */
 public class FlagHashMap {
     HashMap<String, Integer> map = new HashMap<String, Integer>();
+    static private FlagHashMap fh=null;
+
+    public static FlagHashMap getInstance(){
+        if(fh==null){
+            fh=new FlagHashMap();
+            fh.makeHashMap();
+        }
+        return fh;
+    }
 
     public List<Map<String, Integer>> list= new ArrayList<Map<String, Integer>>();
 
