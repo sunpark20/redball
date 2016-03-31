@@ -245,22 +245,22 @@ public class LoadingActivity extends AppCompatActivity {
 
         ArrayList<Integer> codeArray=new ArrayList<Integer>();
 
-//        for(int i=0;i<ja.length();i++){
-//            JSONObject jo=ja.getJSONObject(i);
-//            String score=jo.get("score").toString();
-//
-//            Calendar jCal=StaticMethod.setJsonCal(jo);
-//
-//            if(score.compareTo("vs")==0 //조건1. score값이 비어 있을 때
-//                    && jCal.compareTo(nCal)==-1){ //조건2. 현재시간과 json시간을 비교
-//                int code=(int)jo.get("code");
-//                codeArray.add(code);
-//                count++;
-//            }
-//        }
-        //먼저 date를 채워줌. 순서중요. 이거하고 나서 score해야 한번에 최신으로 됨.
-//        Log.e(TAG,"2016 date를 전부 업데이트 합니다(최적화필요)");
-//        new Thread_query_date(this, ja).execute();
+        for(int i=0;i<ja.length();i++){
+            JSONObject jo=ja.getJSONObject(i);
+            String score=jo.get("score").toString();
+
+            Calendar jCal=StaticMethod.setJsonCal(jo);
+
+            if(score.compareTo("vs")==0 //조건1. score값이 비어 있을 때
+                    && jCal.compareTo(nCal)==-1){ //조건2. 현재시간과 json시간을 비교
+                int code=(int)jo.get("code");
+                codeArray.add(code);
+                count++;
+            }
+        }
+//        먼저 date를 채워줌. 순서중요. 이거하고 나서 score해야 한번에 최신으로 됨.
+        Log.e(TAG,"2016 date를 전부 업데이트 합니다(최적화필요)");
+        new Thread_query_date(this, ja).execute();
 
         Log.e(TAG,"스코어가 "+ count + "만큼 비어있습니다.");
         if(count>0) {
