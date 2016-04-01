@@ -34,6 +34,7 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.GregorianCalendar;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -342,7 +343,19 @@ public class FicturesActivity extends AppCompatActivity {
             JSONObject leagueNum = new JSONObject("{'0':'premier','1':'laliga','2':'bundesliga','3':'serie','4':'ligue1'}");
             positionKey=leagueNum.get(String.valueOf(position))+"_"+date;
             hiddenText.setVisibility(View.GONE);
-            if(newContacts.get(positionKey)!=null){
+
+            //시작- 해당 달의 경기가 있는지 확인, 없으면 경기가 없습니다 띄움.
+            boolean isListOk=false;
+            Iterator<?> keys = newContacts.keys();
+            while( keys.hasNext() ) {
+                String key = (String)keys.next();
+                if(key.equals(positionKey)){
+                    isListOk=true;
+                    break;
+                }
+            }
+            //끝- 해당 달의 경기가 있는지 확인, 없으면 경기가 없습니다 띄움. 끝
+            if(isListOk){
                 array = (JSONArray)newContacts.get(positionKey);
                 JSONObject userObj;
                 resultArray = new JSONArray();
