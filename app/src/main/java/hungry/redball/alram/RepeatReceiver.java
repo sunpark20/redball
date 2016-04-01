@@ -19,7 +19,7 @@ import java.util.Date;
 import java.util.Map;
 import java.util.Set;
 
-import hungry.redball.aStatic.Sfile;
+import hungry.redball.aStatic.StaticFile;
 import hungry.redball.aStatic.StaticMethod;
 import hungry.redball.aStatic.StaticPref;
 import hungry.redball.alram.model.PrefInfo;
@@ -106,7 +106,7 @@ public class RepeatReceiver extends WakefulBroadcastReceiver {
             ArrayList<String> savedTeamArray=(StaticPref.loadPref_prefTeam(context));
             Log.e(TAG, savedTeamArray.toString());
 
-            String loadMatchInfo= Sfile.readFile(context, Sfile.json_fixturesName);
+            String loadMatchInfo= StaticFile.readFile(context, StaticFile.json_fixturesName);
             JSONArray ja=new JSONArray(loadMatchInfo);
 
             for(int i=0;i<ja.length(); i++){
@@ -204,7 +204,7 @@ public class RepeatReceiver extends WakefulBroadcastReceiver {
         }
 
         try{
-            String loadMatchInfo= Sfile.readFile(context, Sfile.json_fixturesName);
+            String loadMatchInfo= StaticFile.readFile(context, StaticFile.json_fixturesName);
             JSONArray ja=new JSONArray(loadMatchInfo);
             for(int i=0;i<ja.length(); i++){
                 //추가된 팀만 추가
@@ -258,7 +258,7 @@ public class RepeatReceiver extends WakefulBroadcastReceiver {
         System.out.println(code+"를 찾습니다.");
 
         try{
-            String loadMatchInfo= Sfile.readFile(context, Sfile.json_fixturesName);
+            String loadMatchInfo= StaticFile.readFile(context, StaticFile.json_fixturesName);
             JSONArray ja=new JSONArray(loadMatchInfo);
             for(int i=0;i<ja.length(); i++){
                 JSONObject row=ja.getJSONObject(i);

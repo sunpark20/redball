@@ -20,13 +20,12 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 
-import hungry.redball.aStatic.Sfile;
+import hungry.redball.aStatic.StaticFile;
 import hungry.redball.aStatic.StaticMethod;
 import hungry.redball.alram.AlarmActivity;
 import hungry.redball.alram.PrefActivity;
 import hungry.redball.alram.RepeatReceiver;
 import hungry.redball.fixtures.FicturesActivity;
-import hungry.redball.matchRepo.ReportActivity;
 import hungry.redball.player.PlayerActivity;
 import hungry.redball.team.TeamActivity;
 import hungry.redball.util.RedballProgressDialog;
@@ -91,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
         HashMap<String, JSONArray> map=new HashMap<String, JSONArray>();
         JSONObject parsedJo = new JSONObject();
         try {
-            JSONArray contacts=new JSONArray(Sfile.readFile(this, Sfile.json_fixturesName));
+            JSONArray contacts=new JSONArray(StaticFile.readFile(this, StaticFile.json_fixturesName));
             JSONObject dateObj;
 
             for(int i=0;i<contacts.length();i++){
@@ -113,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
                 parsedJo.put(key, map.get(key));
             }
 
-            Sfile.saveFile(this, Sfile.json_parsed_fixturesName, parsedJo.toString());
+            StaticFile.saveFile(this, StaticFile.json_parsed_fixturesName, parsedJo.toString());
         } catch(Exception e) {
             e.printStackTrace();
         }

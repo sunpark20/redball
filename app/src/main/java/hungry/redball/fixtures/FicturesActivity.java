@@ -38,7 +38,7 @@ import java.util.List;
 import java.util.Map;
 
 import hungry.redball.R;
-import hungry.redball.aStatic.Sfile;
+import hungry.redball.aStatic.StaticFile;
 import hungry.redball.aStatic.StaticPref;
 import hungry.redball.alram.model.PrefInfo;
 import hungry.redball.team.util.FlagHashMap;
@@ -83,7 +83,7 @@ public class FicturesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fixtures);
         try{
-            newContacts=new JSONObject(Sfile.readFile(this, Sfile.json_parsed_fixturesName));
+            newContacts=new JSONObject(StaticFile.readFile(this, StaticFile.json_parsed_fixturesName));
         }catch (Exception e){
             e.printStackTrace();
         }

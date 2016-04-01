@@ -31,7 +31,7 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.concurrent.CountDownLatch;
 
-import hungry.redball.aStatic.Sfile;
+import hungry.redball.aStatic.StaticFile;
 import hungry.redball.aStatic.StaticMethod;
 import hungry.redball.aStatic.StaticPref;
 import hungry.redball.alram.PrefActivity;
@@ -265,7 +265,7 @@ public class LoadingActivity extends AppCompatActivity {
 
     private void FixturesUpdate(){
 
-        String loadMatchInfo= Sfile.readFile(this, Sfile.json_fixturesName);
+        String loadMatchInfo= StaticFile.readFile(this, StaticFile.json_fixturesName);
         //최초 로딩시, 그 다음 접속 구분해서 fixtures틀 만들기
         if(loadMatchInfo=="") {
             Log.e(TAG, "Fixtures Thread1-Total start download from mongoDB(2016년만받음)");
@@ -425,7 +425,7 @@ public class LoadingActivity extends AppCompatActivity {
             for(Integer i: jMap.keySet())
                 ja.put(jMap.get(i));
 
-            Sfile.saveFile(context, Sfile.json_fixturesName, ja.toString());
+            StaticFile.saveFile(context, StaticFile.json_fixturesName, ja.toString());
             LoadingActivity.mHandler.sendMessage(LoadingActivity.mHandler.obtainMessage(2));
         }
     }//END query_date class
@@ -489,7 +489,7 @@ public class LoadingActivity extends AppCompatActivity {
                 for(int j=0;j<5;j++) {
                     System.out.println(resultJa[j].length());
                     String key="p"+j;
-                    Sfile.saveFile(context, key, resultJa[j].toString());
+                    StaticFile.saveFile(context, key, resultJa[j].toString());
                     StaticMethod.setJ(resultJa[j], j);
                 }
 
@@ -518,7 +518,7 @@ public class LoadingActivity extends AppCompatActivity {
                 Log.e("LoadingActivity", "shared를 불러옵니다.");
                 for(int i=0;i<5;i++){
                     String key="p"+i;
-                    String temp=Sfile.readFile(c, key);
+                    String temp= StaticFile.readFile(c, key);
                     JSONArray ja=new JSONArray(temp.toString());
                     StaticMethod.setJ(ja, i);
                     Log.e("데이터확인", ja.length() + ja.toString());
