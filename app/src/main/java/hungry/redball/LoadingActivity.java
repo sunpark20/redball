@@ -25,7 +25,6 @@ import java.io.InputStreamReader;
 import java.lang.ref.WeakReference;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
@@ -61,6 +60,8 @@ public class LoadingActivity extends AppCompatActivity {
 
     //몽고db와 동기화 제어하는 countDownLatch
     CountDownLatch latch1 = new CountDownLatch(1);
+    //경기일정부터 다운받자.
+    CountDownLatch latch2 = new CountDownLatch(1);
 
     //player 다운결정하는 변수
     boolean alreadyLoad=false;
@@ -69,7 +70,6 @@ public class LoadingActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_loading);
-
         getSupportActionBar().hide();
 
         final ImageView animImageView = (ImageView) findViewById(R.id.ivAnimation);
@@ -308,7 +308,7 @@ public class LoadingActivity extends AppCompatActivity {
             QueryBuilder_loading qb = new QueryBuilder_loading();
             String urlString=qb.buildTotalUrl();
             //보낸 url api 주소 확인
-            Log.e(TAG, "Thread_query_total의 URL: "+urlString);
+            Log.e(TAG, "Thread_query_total URL: "+urlString);
 
             try {
                 result = loadFromNetwork(urlString);
@@ -466,7 +466,6 @@ public class LoadingActivity extends AppCompatActivity {
                     "Ligue 1",
             };
 
-            ArrayList<String> temp=new ArrayList<String>();
             JSONArray[] resultJa=new JSONArray[5];
             try{
                 //init resultJa
@@ -475,6 +474,14 @@ public class LoadingActivity extends AppCompatActivity {
 
                 JSONArray ja=new JSONArray(result);
 
+                //서버가 고장났는지 체크 고장났다면 몽고디비에 0개 들어있어서 0개짜리를 가져 올것이다.
+                if(ja.length()==0) {
+                    Log.e(TAG, "서버고장");
+                    if(!alreadyLoad)
+                        LoadingActivity.mHandler.sendMessage(LoadingActivity.mHandler.obtainMessage(3));
+                    return;
+                }
+
                 for(int i = 0;i<ja.length();i++){
                     JSONObject jo=ja.getJSONObject(i);
                     for(int j=0;j<5;j++){
@@ -482,9 +489,6 @@ public class LoadingActivity extends AppCompatActivity {
                             resultJa[j].put(jo);
                     } //end for-j
                 } //end for-i
-
-                for(int j=0;j<temp.size();j++)
-                    System.out.println(temp.get(j));
 
                 for(int j=0;j<5;j++) {
                     System.out.println(resultJa[j].length());
@@ -539,7 +543,11 @@ public class LoadingActivity extends AppCompatActivity {
         try {
             stream = downloadUrl(urlString);
             str = readIt(stream);
-        } finally {
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        finally
+        {
             if (stream != null) {
                 stream.close();
             }
