@@ -60,6 +60,8 @@ public class FicturesActivity extends AppCompatActivity {
     private ImageButton leftBtn;
     private Bitmap jongSrc,unJongSrc;
 
+    public static View view;
+
     private float firstX;
     private float firstY;
     private float moveY,tmpMoveY;
@@ -82,6 +84,9 @@ public class FicturesActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fixtures);
+        view = getLayoutInflater().inflate(R.layout.fragment_fixtures, null);
+        TextView dateState=(TextView) view.findViewById(R.id.dateState);
+        dateState.setVisibility(View.GONE);
         try{
             newContacts=new JSONObject(Sfile.readFile(this, Sfile.json_parsed_fixturesName));
         }catch (Exception e){
