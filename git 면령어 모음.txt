@@ -1,0 +1,14 @@
+1.머지 실패 했을 때  이전 브런치로 돌아가는것 
+soft , hard 는 옵션이다. (되돌아가는 강도를 설정)
+git reset --hard origin/master
+
+2.head가 끊어졌을 때,  이름없는 브랜치라고 합니다.
+http://stackoverflow.com/questions/5772192/how-can-i-reconcile-detached-head-with-master-origin
+
+3.효석이의 remote branch를 내 로컬로 가지고 오고 싶어요.
+http://stackoverflow.com/questions/9537392/git-fetch-remote-branch
+
+
+
+
+
