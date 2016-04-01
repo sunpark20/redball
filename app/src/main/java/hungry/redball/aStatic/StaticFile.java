@@ -9,7 +9,7 @@ import java.io.IOException;
 /**
  * Created by soy on 2016-03-24.
  */
-public class Sfile {
+public class StaticFile {
     //fixtures 파일이름 저장하는 변수
     public static final String json_fixturesName="json_fixtures";
     public static final String json_parsed_fixturesName="json_parsed";
