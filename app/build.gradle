@@ -9,8 +9,8 @@ android {
         applicationId "com.redball"
         minSdkVersion 16//원래는 16입니다.
         targetSdkVersion 23
-        versionCode 4
-        versionName "1.04"
+        versionCode 5
+        versionName "1.05"
     }
     buildTypes {
         release {
