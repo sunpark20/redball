@@ -1,0 +1,5 @@
+포트폴리오용 update
+//아마존 서버 업데이트 중지.
+mongolab. sunpark20 디비에 있는 자료 활용한다.
+//3월로 고정
+Fictures activity -> 임시***** m에 3월에 넣을께

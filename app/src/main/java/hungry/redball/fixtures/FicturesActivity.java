@@ -101,10 +101,13 @@ public class FicturesActivity extends AppCompatActivity {
         Calendar Cal = new GregorianCalendar();
 			y=String.valueOf(Cal.get(Cal.YEAR)); // 오늘 년도
         if(String.valueOf(Cal.get(Cal.MONTH)+1).length()==1){
-            m="0"+String.valueOf(Cal.get(Cal.MONTH)+1);
+            //임시***** m에 5월 넣을께
+            //m="0"+String.valueOf(Cal.get(Cal.MONTH)+1);
+            m="03";
         }else{
             m=String.valueOf(Cal.get(Cal.MONTH)+1);
         }
+
         d=String.valueOf(Cal.get(Cal.DAY_OF_MONTH)); // 오늘 날짜
 
         typeface = Typeface.createFromAsset(this.getAssets(), "fonts/numbers_font.ttf");
