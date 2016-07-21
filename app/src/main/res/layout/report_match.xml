@@ -53,10 +53,9 @@
             android:layout_weight="4"
             android:layout_margin="10dp"
             android:gravity="center"
-            android:text="44%"
             android:textColor="@color/white"
             android:textSize="35dp"
-            android:id="@+id/repo_hp"/>
+            android:id="@+id/hPossession"/>
         <TextView
             android:layout_width="0dp"
             android:layout_height="50dp"
@@ -74,10 +73,9 @@
             android:layout_weight="4"
             android:layout_margin="10dp"
             android:gravity="center"
-            android:text="56%"
             android:textColor="@color/white"
             android:textSize="35dp"
-            android:id="@+id/repo_ap"/>
+            android:id="@+id/aPossession"/>
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
@@ -91,10 +89,9 @@
             android:layout_weight="4"
             android:layout_margin="10dp"
             android:gravity="center"
-            android:text="44%"
             android:textColor="@color/white"
             android:textSize="35dp"
-            android:id="@+id/repo_hp2323"/>
+            android:id="@+id/hTotalShot"/>
         <TextView
             android:layout_width="0dp"
             android:layout_height="50dp"
@@ -103,7 +100,7 @@
             android:gravity="center"
             android:layout_gravity="center"
             android:background="@color/scoreback"
-            android:text="점유율"
+            android:text="총슈팅"
             android:textColor="@color/white"
             android:textSize="15dp"/>
         <TextView
@@ -112,9 +109,260 @@
             android:layout_weight="4"
             android:layout_margin="10dp"
             android:gravity="center"
-            android:text="56%"
             android:textColor="@color/white"
             android:textSize="35dp"
-            android:id="@+id/repo_ap111"/>
+            android:id="@+id/aTotalShot"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="0.3dp"
+        android:background="@color/ttgray"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="4"
+            android:layout_margin="10dp"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:textSize="35dp"
+            android:id="@+id/hAccurateShot"/>
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="2"
+            android:layout_margin="10dp"
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:background="@color/scoreback"
+            android:text="유효슛"
+            android:textColor="@color/white"
+            android:textSize="15dp"/>
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="4"
+            android:layout_margin="10dp"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:textSize="35dp"
+            android:id="@+id/aAccurateShot"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="0.3dp"
+        android:background="@color/ttgray"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="4"
+            android:layout_margin="10dp"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:textSize="35dp"
+            android:id="@+id/hSuccessPass"/>
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="2"
+            android:layout_margin="10dp"
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:background="@color/scoreback"
+            android:text="패스\n성공률"
+            android:textColor="@color/white"
+            android:textSize="15dp"/>
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="4"
+            android:layout_margin="10dp"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:textSize="35dp"
+            android:id="@+id/aSuccessPass"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="0.3dp"
+        android:background="@color/ttgray"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="4"
+            android:layout_margin="10dp"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:textSize="35dp"
+            android:id="@+id/hTackles"/>
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="2"
+            android:layout_margin="10dp"
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:background="@color/scoreback"
+            android:text="패스\n차단"
+            android:textColor="@color/white"
+            android:textSize="15dp"/>
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="4"
+            android:layout_margin="10dp"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:textSize="35dp"
+            android:id="@+id/aTackles"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="0.3dp"
+        android:background="@color/ttgray"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="4"
+            android:layout_margin="10dp"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:textSize="35dp"
+            android:id="@+id/hContest"/>
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="2"
+            android:layout_margin="10dp"
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:background="@color/scoreback"
+            android:text="경합\n승리"
+            android:textColor="@color/white"
+            android:textSize="15dp"/>
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="4"
+            android:layout_margin="10dp"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:textSize="35dp"
+            android:id="@+id/aContest"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="0.3dp"
+        android:background="@color/ttgray"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="4"
+            android:layout_margin="10dp"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:textSize="35dp"
+            android:id="@+id/hAerial"/>
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="2"
+            android:layout_margin="10dp"
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:background="@color/scoreback"
+            android:text="공중볼\n승리"
+            android:textColor="@color/white"
+            android:textSize="15dp"/>
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="4"
+            android:layout_margin="10dp"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:textSize="35dp"
+            android:id="@+id/aAerial"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="0.3dp"
+        android:background="@color/ttgray"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="4"
+            android:layout_margin="10dp"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:textSize="35dp"
+            android:id="@+id/hFoul"/>
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="2"
+            android:layout_margin="10dp"
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:background="@color/scoreback"
+            android:text="파울"
+            android:textColor="@color/white"
+            android:textSize="15dp"/>
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="4"
+            android:layout_margin="10dp"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:textSize="35dp"
+            android:id="@+id/aFoul"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="0.3dp"
+        android:background="@color/ttgray"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="4"
+            android:layout_margin="10dp"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:textSize="35dp"
+            android:id="@+id/hOffside"/>
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="2"
+            android:layout_margin="10dp"
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:background="@color/scoreback"
+            android:text="오프사이드"
+            android:textColor="@color/white"
+            android:textSize="15dp"/>
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="4"
+            android:layout_margin="10dp"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:textSize="35dp"
+            android:id="@+id/aOffside"/>
     </LinearLayout>
 </LinearLayout>

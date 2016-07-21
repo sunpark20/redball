@@ -9,6 +9,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
@@ -61,11 +62,13 @@ public class Frag_fictures extends Fragment{
 	private View view;
 	private ListView listView;
 	private ArrayList<Fixtures> rows=new ArrayList<Fixtures>();
+	private boolean clickCount;
 	static public final CustomAdapter ca[]=new CustomAdapter[5];
 	static public final boolean isLimit[]=new boolean[5];
 	static public final int scrollIndex[]=new int[5];
 	ArrayList<JSONObject> alistJsonObj = new ArrayList<JSONObject>();
 	Bitmap onMSrc,unMSrc;
+	private long mLastClickTime = 0;
 	//uk
 	Map<Integer, PrefInfo> prefInfo;
 
@@ -125,6 +128,7 @@ public class Frag_fictures extends Fragment{
 		unMSrc=BitmapFactory.decodeResource(res, R.drawable.f_unjong, options);
 		if (FicturesActivity.isOnce) {
 			FicturesActivity.isOnce=false;
+			clickCount=true;
 //			FicturesActivity.testCodeArr.put(959584,true);
 //			FicturesActivity.testCodeArr.put(959662,true);
 //			FicturesActivity.testCodeArr.put(959672,true);
@@ -498,10 +502,22 @@ public class Frag_fictures extends Fragment{
 							Intent intent = new Intent(getActivity(), ReportActivity.class);
 							intent.putExtra("report",reportLoad(String.valueOf(code)));
 							intent.putExtra("score",tempScore);
-							intent.putExtra("hTeam",tempHome);
-							intent.putExtra("aTeam",tempAway);
-							startActivity(intent);
-							Toast.makeText(getActivity(), code+"", Toast.LENGTH_SHORT).show();
+							intent.putExtra("hTeam", tempHome);
+							intent.putExtra("aTeam", tempAway);
+							if(clickCount){
+								if(clickCount){
+									startActivity(intent);
+									Toast.makeText(getActivity(), code+"", Toast.LENGTH_SHORT).show();
+									clickCount=false;
+								}
+								Handler handler = new Handler();
+								handler.postDelayed(new Runnable() {
+									@Override
+									public void run() {
+										clickCount=true;
+									}
+								}, 2000);
+							}
 						}
 					});
 				}

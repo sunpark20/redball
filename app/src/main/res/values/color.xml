@@ -23,4 +23,9 @@
     <color name="transparent">#00ffffff</color>
     <color name="datestate">#A0F5DCD8</color>
     <color name="scoreback">#d9010410</color>
+    <color name="positionred">#ff3333</color>
+    <color name="positiongreen">#d927d924</color>
+    <color name="positionblue">#d937a5e9</color>
+    <color name="positionyellow">#d9ffdf0f</color>
+    <color name="positiongray">#e1817b62</color>
 </resources>

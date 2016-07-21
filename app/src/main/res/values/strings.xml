@@ -37,4 +37,28 @@
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
 
+    <string name="accurate_pass">패스성공</string>
+    <string name="total_pass">패스</string>
+    <string name="touches">터치</string>
+    <string name="won_contest">경합승리</string>
+    <string name="total_scoring_att">돌파</string>
+    <string name="post_scoring_att">포스트공격</string>
+    <string name="aerial_won">공중승리</string>
+    <string name="aerial_lost">공중실패</string>
+    <string name="total_tackle">태클</string>
+    <string name="fouls">파울</string>
+    <string name="man_of_the_match">MVP</string>
+    <string name="saves">선방</string>
+    <string name="yellow_card">경고</string>
+    <string name="goals">득점</string>
+    <string name="goal_assist">도움</string>
+    <string name="formation_place">위치</string>
+    <string name="error_lead_to_goal">실책</string>
+    <string name="good_high_claim">공중처리</string>
+    <string name="blocked_scoring_att">공격저지</string>
+    <string name="six_yard_block">근접선방</string>
+    <string name="penalty_conceded">패널제공</string>
+    <string name="red_card">퇴장</string>
+    <string name="own_goals">자 책 골</string>
+
 </resources>

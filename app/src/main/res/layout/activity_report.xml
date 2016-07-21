@@ -123,7 +123,7 @@
         <LinearLayout
             android:id="@+id/view_container"
             android:layout_width="match_parent"
-            android:layout_height="2000dp"
+            android:layout_height="1300dp"
             android:orientation="vertical">
             <android.support.v4.view.ViewPager
                 android:id="@+id/viewPager"

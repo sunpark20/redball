@@ -393,7 +393,7 @@ public class LoadingActivity extends AppCompatActivity {
                     String month=StaticMethod.iTos(localTime.get(Calendar.MONTH)+1);
                     if(month.length()==1)
                         month="0"+month;
-//                            System.out.println(month);
+                            System.out.println(month);
                     tDate.put("month", month);
                     String day=StaticMethod.iTos(localTime.get(Calendar.DAY_OF_MONTH));
 //                            System.out.println(day);
